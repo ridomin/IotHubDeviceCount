@@ -11,4 +11,4 @@ router.get('/deviceCount', function(req, res) {
         res.json(stats.totalDeviceCount)
     })
 })
-module.exports = router;
+module.exports = router

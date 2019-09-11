@@ -4,12 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "start node app & browser-sync start -p http://localhost:3000 -f wwwroot/*"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "rido",
+  "license": "ASIS",
   "dependencies": {
     "azure-iothub": "^1.10.3",
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.26.7"
   }
 }
