@@ -7,7 +7,7 @@
   },
   "main": "app.js",
   "scripts": {
-    "start": "start node app & browser-sync start -p http://localhost:3000 -f wwwroot/*"
+    "start": "node app & browser-sync start -p http://localhost:3000 -f wwwroot/*"
   },
   "author": "rido",
   "license": "MIT",
