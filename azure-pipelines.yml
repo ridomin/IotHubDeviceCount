@@ -1,4 +1,4 @@
-# Docker
+
 # Build a Docker image 
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
@@ -23,7 +23,8 @@ stages:
     - task: Docker@2
       displayName: Build an image
       inputs:
-        command: build
+        command: buildAndPush
         dockerfile: 'Dockerfile'
-        tags: |
-          $(tag)
+        repository: dockers
+        tags: $(tag)
+  
