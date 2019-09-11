@@ -2,7 +2,9 @@
   "name": "myexpressiotapp",
   "version": "1.0.0",
   "description": "Sample express app using iothub node sdk",
-  "repository": {"url": "https://github.com/ridomin/IotHubDeviceCount"},
+  "repository": {
+    "url": "https://github.com/ridomin/IotHubDeviceCount"
+  },
   "main": "app.js",
   "scripts": {
     "start": "start node app & browser-sync start -p http://localhost:3000 -f wwwroot/*"
@@ -11,6 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "azure-iothub": "^1.10.3",
+    "body-parser": "^1.19.0",
     "express": "^4.17.1"
   }
 }

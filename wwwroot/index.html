@@ -13,6 +13,12 @@
         <div id="numDevices">0</div>
         <div id="currentTime">00:00:00 AM</div>
     </div>
+    <div id="footer">
+        <form action="/api/connection-string" method="POST" id="form">
+            <input id="connectionstring" name="connectionstring" type="text" value="" size="80" />
+            <input type="submit" value="Update"/>
+        </form>
+    </div>
     <script src="index.js"></script>
     
 </body>
