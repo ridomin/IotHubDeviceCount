@@ -2,7 +2,7 @@ const express = require('express'),
       app = express(),
       router = express.Router()
 
-const hub = require('azure-iothub')
+const hub = require('./iothub.js')
 const port = 3000
 const connectionString = 'HostName=StrangerThings.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=XFgZcgv+lJSGfqO2RhMTn6ljpy7s4Zm0qf94GSYrRR8='
 
@@ -15,10 +15,8 @@ router.get('/', function (req, res, next){
 })
 
 router.get('/deviceCount', function(req, res) {
-    const registry = hub.Registry.fromConnectionString(connectionString)
-    registry.getRegistryStatistics(function (err, stats) {
-        if (err) console.error(err.message)
-        res.json(stats.enabledDeviceCount)
+    hub.getDeviceCount(connectionString, (returnedDevices)=>{
+        res.json(returnedDevices)
     })
 })
 
