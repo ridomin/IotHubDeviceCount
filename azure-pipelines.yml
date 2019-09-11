@@ -1,4 +1,4 @@
-# Docker
+
 # Build a Docker image 
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
@@ -25,5 +25,8 @@ stages:
       inputs:
         command: build
         dockerfile: 'Dockerfile'
-        tags: |
-          $(tag)
+        tags: $(tag)
+    - task: Docker@2
+      containerRegistry: 'dockers'
+      repository: 'iotexpress'
+      command: 'push'
