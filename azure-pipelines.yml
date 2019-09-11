@@ -25,5 +25,6 @@ stages:
       inputs:
         command: buildAndPush
         dockerfile: 'Dockerfile'
+        repository: dockers
         tags: $(tag)
   
