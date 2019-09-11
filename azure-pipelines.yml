@@ -27,6 +27,8 @@ stages:
         dockerfile: 'Dockerfile'
         tags: $(tag)
     - task: Docker@2
-      containerRegistry: 'dockers'
-      repository: 'iotexpress'
-      command: 'push'
+      inputs:
+        containerRegistry: 'dockers'
+        repository: 'iotexpress'
+        command: 'push'
+        tags: $(tag)
