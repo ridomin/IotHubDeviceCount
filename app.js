@@ -36,4 +36,10 @@ router.get('/deviceCount', function(req, res) {
     }
 })
 
+router.get('/deviceList', (req,res) => {
+    hub.getDeviceList(connectionString, (list)=>{
+        res.json(list)
+    })
+})
+
 app.listen(port, () => console.log(`Express app listening on port ${port}!`));

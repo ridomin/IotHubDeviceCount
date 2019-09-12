@@ -1,10 +1,16 @@
 const hub = require('azure-iothub')
 
-function getDeviceCount(connectionString, cb){
+function getDeviceCount(connectionString, cb) {
     const registry = hub.Registry.fromConnectionString(connectionString)
-    registry.getRegistryStatistics(function (err, stats) {
-        if (err) console.error(err.message)
-        cb(stats.enabledDeviceCount)
+    registry.list().then(function (devices) {
+        cb(devices.responseBody.length)
     })
 }
-module.exports = {getDeviceCount}
+
+function getDeviceList(connectionString, cb) {
+    const registry = hub.Registry.fromConnectionString(connectionString)
+    registry.list().then((devices)=>{
+        cb(devices.responseBody)
+    })
+}
+module.exports = {getDeviceCount, getDeviceList}
