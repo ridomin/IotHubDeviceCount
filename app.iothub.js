@@ -12,9 +12,8 @@ function getDeviceList(connectionString, cb) {
                 status:d.status
                 }
             })
-        console.log(devicesInfo.length + " devices found")
+        console.log(`found ${devicesInfo.length} devices`)
         cb(devicesInfo)
         })
 }
-
 module.exports = {getDeviceList}

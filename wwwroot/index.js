@@ -8,17 +8,17 @@ fetch('/api/connection-string')
             connectionstring.value="set connection string"
         } else {
           //  setInterval(()=>{
-                currentTime.innerText=new Date().toLocaleTimeString()
-                fetch('/api/deviceList')
-                    .then((resp)=>{return resp.json()})
-                    .then((devices)=>{
-                        var app = new Vue({
-                            el: '#listDevices',
-                            data: {
-                                devices: devices
-                            }
-                        })
+            fetch('/api/deviceList')
+                .then((resp)=>{return resp.json()})
+                .then((devices)=>{
+                    var app = new Vue({
+                        el: '#listDevices',
+                        data: {
+                            devices: devices,
+                            now: new Date().toLocaleTimeString()
+                        }
                     })
+                })
           //      }, 5000)
             }
         })

@@ -21,14 +21,14 @@
         <div id="listDevices" v-cloak>
             <div>Connected Devices to IoT Hub</div>
             <div id="numDevices">{{devices.length}}</div>
-            <div id="currentTime">{{now}}}}</div>
+            <div id="currentTime">{{now}}</div>
             <ul>
                 <li v-for="d in devices">
                         <span class="" v-bind:class="{
                                 'connected': d.state==='Connected', 
                                 'disconnected':d.state==='Disconnected', 
                                 'disabled':d.status==='disabled'}">
-                            {{d.id}} {{d.status}} {{d.state}} {{d.time}}
+                            {{d.id}} {{d.status}} and {{d.state}} {{d.time}}
                         </span>
                 </li>
             </ul>
