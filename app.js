@@ -12,7 +12,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api', router)
 app.use(express.static('wwwroot'))  
 
-app.get('/hw', (req, res) => res.send('Hello World!'))
 router.get('/', function (req, res, next){
     res.sendFile('index.html', {root: __dirname + "wwwroot/index.html"})
 })
@@ -26,20 +25,14 @@ router.post('/connection-string',(req,res)=> {
     res.redirect('/')
 })
 
-router.get('/deviceCount', function(req, res) {
+router.get('/deviceList', (req,res) => {
     if (connectionString.length>0) {
-        hub.getDeviceCount(connectionString, (returnedDevices)=>{
-            res.json(returnedDevices)
+        hub.getDeviceList(connectionString, (list)=>{
+            res.json(list)
         })
     } else {
-        res.json(-1)
+        res.json({})
     }
-})
 
-router.get('/deviceList', (req,res) => {
-    hub.getDeviceList(connectionString, (list)=>{
-        res.json(list)
-    })
 })
-
-app.listen(port, () => console.log(`Express app listening on port ${port}!`));
+app.listen(port, () => console.log(`IoT Express app listening on port ${port}`));

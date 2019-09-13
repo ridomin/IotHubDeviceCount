@@ -5,14 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="s.css" />
-    <title>Azure IoT Hub</title>
+    <title>IoT Express</title>
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 </head>
 <body>
     <div id="main">
-        <div>Connected Devices to IoT Hub</div>
-        <div id="numDevices">0</div>
-        <div id="currentTime">00:00:00 AM</div>
         <div>
             <form action="/api/connection-string" method="POST" id="form">
                 <input id="connectionstring" name="connectionstring" type="text" value="" size="80" />
@@ -20,14 +17,21 @@
             </form>
         </div>
         <div id="listDevices" v-cloak>
+            <div>Connected Devices to IoT Hub</div>
+            <div id="numDevices">{{devices.length}}</div>
+            <div id="currentTime">{{now}}}}</div>
             <ul>
                 <li v-for="d in devices">
-                    <span>{{d.id}} ({{d.time}}) {{d.state}}</span>
+                    <span class="" v-bind:class="{
+                                'connected': d.state==='Connected', 
+                                'disconnected':d.state==='Disconnected', 
+                                'disabled':d.status==='disabled'}">
+                        {{d.id}} {{d.status}} {{d.state}} {{d.time}}
+                    </span>
                 </li>
             </ul>
         </div>
     </div>
     <script src="index.js"></script>
-    
 </body>
 </html>

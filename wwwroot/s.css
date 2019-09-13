@@ -4,3 +4,6 @@ body{font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
 #currentTime{font-size: 24px;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;color:gray}
 ul{text-align: left}
 [v-cloak] { display:none; }
+.connected{color:green;font-weight: bold}
+.disconnected{color:grey}
+.disabled{color:red;font-style: oblique}
