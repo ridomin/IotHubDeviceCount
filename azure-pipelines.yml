@@ -26,6 +26,6 @@ stages:
         command: buildAndPush
         dockerfile: 'Dockerfile'
         containerRegistry: dockerhub-ridomin
-        repository: iotexpress
+        repository: ridomin/iotexpress
         tags: $(tag)
   
