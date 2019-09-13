@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>IoT Express</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="s.css" />
-    <title>IoT Express</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 </head>
 <body>
     <div id="main">
         <div>
             <form action="/api/connection-string" method="POST" id="form">
-                <input id="connectionstring" name="connectionstring" type="text" value="" size="80" />
-                <input type="submit" value="Update"/>
+                <input id="connectionstring" name="connectionstring" onfocus="if (this.value.length,5) this.value=''" type="text" value="" size="80" />
+                <input type="submit" value="Refresh"/>
             </form>
+            <i id="spinner" class="fa fa-spinner fa-spin" style="font-size:48px"></i>
         </div>
         <div id="listDevices" v-cloak>
             <div>Connected Devices to IoT Hub</div>
@@ -22,12 +24,12 @@
             <div id="currentTime">{{now}}}}</div>
             <ul>
                 <li v-for="d in devices">
-                    <span class="" v-bind:class="{
+                        <span class="" v-bind:class="{
                                 'connected': d.state==='Connected', 
                                 'disconnected':d.state==='Disconnected', 
                                 'disabled':d.status==='disabled'}">
-                        {{d.id}} {{d.status}} {{d.state}} {{d.time}}
-                    </span>
+                            {{d.id}} {{d.status}} {{d.state}} {{d.time}}
+                        </span>
                 </li>
             </ul>
         </div>

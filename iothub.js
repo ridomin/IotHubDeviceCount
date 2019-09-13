@@ -12,7 +12,8 @@ function getDeviceList(connectionString, cb) {
                 status:d.status
                 }
             })
-            cb(devicesInfo)
+        console.log(devicesInfo.length + " devices found")
+        cb(devicesInfo)
         })
 }
 

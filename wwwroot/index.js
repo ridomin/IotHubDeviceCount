@@ -1,4 +1,5 @@
 (()=>{
+spinner.style.display='block'    
 fetch('/api/connection-string')
     .then((resp)=>{return resp.json()})
     .then((json)=>{
@@ -21,4 +22,5 @@ fetch('/api/connection-string')
           //      }, 5000)
             }
         })
+spinner.style.display='none'            
 })()
