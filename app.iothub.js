@@ -3,7 +3,7 @@ const moment = require('moment')
 
 function getDeviceList(connectionString, cb) {
     const registry = hub.Registry.fromConnectionString(connectionString)
-    registry.list().then((devices)=>{
+    registry.list().then( devices => {
         const devicesInfo = devices.responseBody.map((d)=>{
             return {
                 id:d.deviceId, 

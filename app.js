@@ -21,9 +21,7 @@ router.post('/connection-string',(req,res)=> {
 
 router.get('/deviceList', (req,res) => {
     if (connectionString.length>0) {
-        hub.getDeviceList(connectionString, (list)=>{
-            res.json(list)
-        })
+        hub.getDeviceList(connectionString, list => res.json(list))
     } else {
         res.json({})
     }
