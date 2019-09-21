@@ -1,9 +1,16 @@
 (()=>{
 
-function bind(devices) {
+function getHubNameFrom(connectionstring){
+    const hubRegex = /(?<=HostName=).*(?=;SharedAccessKeyName)/i.exec(connectionstring)
+    const hubName = hubRegex.length > 0 ? hubRegex[0] : ''
+    return hubName
+}
+
+function bind(hubName,devices) {
     var app = new Vue({
-        el: '#listDevices',
+        el: '#deviceList',
         data: {
+            hub: hubName,
             devices: devices,
             now: new Date().toLocaleTimeString()
         }
@@ -17,14 +24,13 @@ fetch('/api/connection-string')
     if (json.length<10) {
         connectionstring.value="set connection string"
     } else {
+        hubName = getHubNameFrom(json)
         //  setInterval(()=>{
-            spinner.style.display='block'    
 
             fetch('/api/deviceList')
                 .then( resp => resp.json())
-                .then( devices => bind(devices))
+                .then( devices => bind(hubName,devices))
             
-            spinner.style.display='none'
           //      }, 5000)
             }
         })
