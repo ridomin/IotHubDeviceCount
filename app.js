@@ -26,4 +26,30 @@ router.get('/deviceList', (req,res) => {
         res.json({})
     }
 })
+
+router.get('/getInterfaces', async (req, res) => {
+    const result = await hub.getInterfaces(connectionString, req.query.deviceId)
+    console.log(`getInterfaces on ${req.query.deviceId}`)
+    res.json(result)
+})
+
+router.get('/getInterfaceDetails', async (req, res) => {
+    const result = await hub.getInterfaceDetails(connectionString, req.query.urn)
+    console.log(`getInterfaceDetails on ${req.query.urn}`)
+    res.json(result)
+})
+  
+router.post('/runCommand', async (req, res) => {
+    const result = await hub.runCommand(
+      connectionString,
+      req.query.deviceId,
+      req.query.interfaceName,
+      req.query.command,
+      req.query.param)
+  
+    console.log(`runCommand on ${req.query.deviceId}/${req.query.interfaceName}/${req.query.command}/${req.query.param}\r\nResponse: ${JSON.stringify(result)}`)
+  
+    res.json(result);
+  })
+
 app.listen(port, () => console.log(`IoT Express app listening on port ${port}`));
