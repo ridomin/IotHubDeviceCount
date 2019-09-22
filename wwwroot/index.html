@@ -14,10 +14,12 @@
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 </head>
 <body class="topLevel">
-            <form action="/api/connection-string" method="POST" id="form">
-                <input id="connectionstring" name="connectionstring" onfocus="if (this.value.length,5) this.value=''" type="text" value="" size="80" />
-                <input type="submit" value="Refresh"/>
-            </form>
+    
+    <form action="/api/connection-string" method="POST" id="form">
+        <input id="connectionstring" name="connectionstring" onfocus="if (this.value.length,5) this.value=''" type="text" value="" size="80" />
+        <input type="submit" value="Refresh"/>
+    </form>
+
     <div id="deviceList" v-cloak>
         <div>
             <span class="h1 elbowRoom">
@@ -48,7 +50,7 @@
                               />
                     </center>
                     <div class="card-body">
-                        <a class="btn" 
+                        <a type button class="btn" 
                             v-if="device.status==='Enabled'"
                             v-bind:class="{
                                 'btn-success': device.state==='Connected', 
@@ -59,9 +61,13 @@
                             v-else href="#">Disabled</a>
                         
                         <div class="card-text">{{device.state}} {{device.time}}</div>
-                    </div>
-                </div>
+                    </div> <!-- card -->
+                </div> <!-- for devices -->
             </div>
+        </div>
+        <!-- Modal -->
+        <div>
+
         </div>
     </div>
     <script src="index.js"></script>
