@@ -23,6 +23,7 @@ fetch('/api/connection-string')
     connectionstring.value=json
     if (json.length<10) {
         connectionstring.value="set connection string"
+        formConnectionString.collapse('show')
     } else {
         hubName = getHubNameFrom(json)
         //  setInterval(()=>{
