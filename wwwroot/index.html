@@ -18,7 +18,7 @@
                 <input id="connectionstring" name="connectionstring" onfocus="if (this.value.length,5) this.value=''" type="text" value="" size="80" />
                 <input type="submit" value="Refresh"/>
             </form>
-    <div id="deviceList">
+    <div id="deviceList" v-cloak>
         <div>
             <span class="h1 elbowRoom">
                 Connected Devices <span class="badge badge-primary" v-if="devices.length > 0">{{devices.length}}</span>
@@ -48,14 +48,17 @@
                               />
                     </center>
                     <div class="card-body">
-                        <div class="card-text">{{device.state}} {{device.status}}</div>
-                        <div class="card-text">{{device.time}}</div>
-                        <a class="btn btn-primary elbowRoom" 
+                        <a class="btn" 
+                            v-if="device.status==='Enabled'"
                             v-bind:class="{
-                                'connected': device.state==='Connected', 
-                                'disconnected':device.state==='Disconnected', 
-                                'disabled':device.status==='Disabled'}"
+                                'btn-success': device.state==='Connected', 
+                                'btn-dark':device.state==='Disconnected'}"
                             v-bind:href="'device-details.html?deviceId=' + device.id">Details</a>
+
+                        <a class="btn btn-danger" 
+                            v-else href="#">Disabled</a>
+                        
+                        <div class="card-text">{{device.state}} {{device.time}}</div>
                     </div>
                 </div>
             </div>
