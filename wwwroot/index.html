@@ -32,23 +32,29 @@
         </div>
         <div class="container-fluid">
             <div class="row align-items-start" v-if="devices.length > 0">
-                <div :id="device.deviceId" class="col-auto card elbowRoom" v-for="device in devices">
+                <div :id="device.deviceId" class="col-auto card elbowRoom mw-75" v-for="device in devices">
                     <center>
-                        <img class=card-img-top"
-                            src="https://www.seeedstudio.site/media/catalog/product/cache/9d0ce51a71ce6a79dfa2a98d65a0f0bd/h/t/httpsstatics3.seeedstudio.comseeedfile2017-09bazaar576144_img_3900a.jpg"
-                            height="100px" width="150px" v-if="device.manufacturer === 'MXChip'" />
-                        <img class=card-img-top"
-                            src="https://microsoft.github.io/azure-iot-developer-kit/assets/images/icon-iot-hub.svg"
-                            height="100px" width="100px" v-else />
+                        <div class="card-title h4">{{device.id}}</div>
+                        <img v-if="device.manufacturer === 'MXChip'"
+                            class="card-img-top" 
+                            src="mxchip.jpg" 
+                            style="width:150px;height:150px"
+                             />
+
+                        <img v-else 
+                            class="card-img-top"
+                            src="icon-iot-hub.svg"
+                            style="width:100px;height:150px"
+                              />
                     </center>
-                    <div class="card-title h5 connectedDevice">{{device.id}}</div>
                     <div class="card-body">
-                        <div class="card-text">{{device.lastActivityTime}}</div>
+                        <div class="card-text">{{device.state}} {{device.status}}</div>
+                        <div class="card-text">{{device.time}}</div>
                         <a class="btn btn-primary elbowRoom" 
                             v-bind:class="{
                                 'connected': device.state==='Connected', 
                                 'disconnected':device.state==='Disconnected', 
-                                'disabled':device.status==='disabled'}"
+                                'disabled':device.status==='Disabled'}"
                             v-bind:href="'device-details.html?deviceId=' + device.id">Details</a>
                     </div>
                 </div>
