@@ -1,0 +1,78 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="style.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Device Details</title>
+</head>
+
+<body>
+    <div id="deviceDetails" v-cloak>
+        <div class="h1 elbowRoom">Device Details
+            <span class="badge badge-primary elbowRoom" v-if="deviceId">{{deviceId}}</span>
+        </div>
+
+        <div class="h3 elbowRoom">PnP Interfaces</div>
+        <div v-for="pnpInterface in pnpInterfaces">
+            <div class="elbowRoom">
+                <div class="alert alert-primary h4" role="alert">{{pnpInterface.urn}}</div>
+                <table class="table table-striped" :id="pnpInterface.urn">
+                    <thead>
+                        <tr>
+                            <th scope="col">Type</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Command</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="detail in pnpInterface.details">
+                            <td>{{detail.schema}}</td>
+                            <td>{{detail.name}}</td>
+                            <td>{{detail.description}}</td>
+                            <td>
+                                <form class="form-group" action="" onsubmit="runCommand(this);"
+                                    v-if="detail.schema === 'Command'">
+                                    <input type="hidden" name="deviceId" :value="deviceId" />
+                                    <input type="hidden" name="interfaceName" :value="pnpInterface.name" />
+                                    <input type="hidden" name="command" :value="detail.name" />
+                                    <input type="hidden" name="paramName" :value="detail.commandParam.name"
+                                        v-if="!!detail.commandParam" />
+                                    <input type="hidden" name="schema" :value="detail.commandParam.schema"
+                                        v-if="!!detail.commandParam" />
+                                    <div class="input-group mb-3" v-if="!!detail.commandParam">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="paramInfo">Parameter "{{detail.commandParam.name}}" ({{detail.commandParam.schema}})</span>
+                                        </div>
+                                        <textarea name="param" class="form-control" aria-describedby="paramInfo"></textarea>
+                                    </div>
+                                    <input type="submit" value="Run" class="btn btn-outline-success btn-sm" style="margin-bottom: 15px;" />
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="resultLabel">Result</span>
+                                        </div>
+                                        <input type="text" name="result" readonly class="form-control"
+                                            aria-describedby="resultLabel"></input>
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="device-details.js" type="text/javascript" charset="utf-8"></script>
+</body>
+
+</html>

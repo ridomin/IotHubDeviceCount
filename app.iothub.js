@@ -1,4 +1,5 @@
 const hub = require('azure-iothub')
+const dtService = require('azure-iot-digitaltwins-service');
 const moment = require('moment')
 
 function getDeviceList(connectionString, cb) {
@@ -24,4 +25,52 @@ function getDeviceList(connectionString, cb) {
             }
         })
 }
-module.exports = {getDeviceList}
+
+async function getInterfaces(connectionString, deviceId) {
+    const credentials = new dtService.IoTHubTokenCredentials(connectionString)
+    const digitalTwinServiceClient = new dtService.DigitalTwinServiceClient(credentials)
+    let dt = null
+    try {
+        dt = await digitalTwinServiceClient.getDigitalTwin(deviceId)
+    } catch (err) {
+        console.log(err)
+        return
+    }
+    return dt
+      .interfaces
+      .urn_azureiot_ModelDiscovery_DigitalTwin
+      .properties
+      .modelInformation
+      .reported
+      .value
+      .interfaces
+}
+
+async function getInterfaceDetails(connectionString, urn) {
+    const credentials = new dtService.IoTHubTokenCredentials(connectionString)
+    const digitalTwinServiceClient = new dtService.DigitalTwinServiceClient(credentials)
+    let response
+    try {
+        response = await digitalTwinServiceClient.getModel(urn)
+    } catch (err) {
+        console.log(err)
+        return
+    }
+    return response.contents
+  }
+
+async function runCommand(connectionString, deviceId, interfaceName, command, param) {
+    const credentials = new dtService.IoTHubTokenCredentials(connectionString)
+    const digitalTwinServiceClient = new dtService.DigitalTwinServiceClient(credentials)
+    const cmdParam = JSON.parse(param)
+    let response
+    try {
+        response = await digitalTwinServiceClient.invokeCommand(deviceId, interfaceName, command, cmdParam)
+    } catch (err) {
+        console.log(err)
+        return
+    }
+    return response.result
+}
+
+module.exports = {getDeviceList, getInterfaces, getInterfaceDetails, runCommand}
