@@ -25,7 +25,7 @@
                 <span class="sr-only">Loading...</span>
             </span>
         </div>
-        <div class="alert alert-secondary elbowRoom" v-if="hub">
+        <div class="alert alert-secondary elbowRoom" >
             Monitoring Azure IoT Hub <b>{{hub}}</b>. 
             <button class="btn-link" 
                 data-toggle="collapse" data-target="#formConnectionString" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -43,7 +43,7 @@
                     <div class="form-group">
                         <form action="/api/connection-string" method="POST" id="form">
                             <input id="connectionstring" name="connectionstring" onfocus="if (this.value.length,5) this.value=''" type="text" value="" size="80" />
-                            <input type="submit" value="Set connection string"/>
+                            <input type="button" value="Set connection string" v-on:click="postConnectionString"/>
                         </form>
                     </div>
                 </div>

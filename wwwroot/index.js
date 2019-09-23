@@ -1,21 +1,40 @@
 (()=>{
 
-let _hubName = ""
 let refresh = 5000
 
-function createVueApp(devices) {
+function createVueApp() {
     var intervalId
+  
     var app = new Vue({
         el: '#deviceList',
         data: {
-            hub: _hubName,
-            devices: devices,
+            hub: "not set",
+            devices: {},
             now: new Date().toLocaleTimeString(),
             elapsed: ''
         },
         methods: {
             updateRefresh: function(event) {
                 refresh = parseInt(prompt("Seconds to refresh", "5"), 10) * 1000
+            },
+            refreshDevices : function() {
+                fetch('/api/deviceList')
+                    .then( resp => resp.json())
+                    .then( devicesDto => this.devices = devicesDto)
+            },
+            postConnectionString: function(event) {
+                console.log(connectionstring.value)
+                fetch("/api/connection-string",
+                    {
+                        method: 'POST',
+                        headers : { 
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body : `connectionstring=${encodeURIComponent(connectionstring.value)}`
+                    })
+                    .then(resp=>resp.json())
+                    .then(json=>this.hub=JSON.stringify(json))
+                this.refreshDevices()
             },
             toggleAutoRefresh : function(event) {
                 if (event.srcElement.checked) {
@@ -26,9 +45,7 @@ function createVueApp(devices) {
                     if (currentTime-intervalTime>refresh){
                         console.log("timer")
                         intervalTime = currentTime
-                        fetch('/api/deviceList')
-                            .then( resp => resp.json())
-                            .then( devicesDto => devices = devicesDto)
+                        this.refreshDevices()
                     } else {
                         //console.log("wait")
                     }
@@ -39,20 +56,19 @@ function createVueApp(devices) {
             }
         }
     })
+    return app
 }
+
+var app = createVueApp()
 
 
 fetch('/api/connection-string')
     .then(resp=> resp.json())
     .then(json=>{
-        connectionstring.value=json
-        if (json.length<10) {
-            _hubName="<not configured>"
+        if (json.length<20) {
+            app.hub="<not configured>"
         } else {
-            _hubName=json
-            fetch('/api/deviceList')
-                .then( resp => resp.json())
-                .then( devices => createVueApp(devices))           
-            }
-        })
+            app.hub=json
+            app.refreshDevices()
+        }})
 })()
