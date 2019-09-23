@@ -8,12 +8,27 @@ const port = 3000
 
 let connectionString=''
 
+function getHubNameFrom(connectionstring){
+    const hubRegex = /(?<=HostName=).*(?=;SharedAccessKeyName)/i.exec(connectionstring)
+    const hubName = hubRegex.length > 0 ? hubRegex[0] : ''
+    return hubName
+}
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api', router)
 app.use(express.static('wwwroot'))  
 
 router.get('/', (req, res, next) => res.sendFile('index.html', {root: __dirname + "wwwroot/index.html"}))
-router.get('/connection-string', (req,res)=> res.json(connectionString))
+
+router.get('/connection-string', (req,res)=> {
+    if (connectionString.length>0) {
+        const hubRegex = /(?<=HostName=).*(?=;SharedAccessKeyName)/i.exec(connectionString)
+        const hubName = hubRegex.length > 0 ? hubRegex[0] : ''
+        res.json(hubName)
+    } else {
+        res.json("not configured")
+    }
+})
 router.post('/connection-string',(req,res)=> {
     connectionString = req.body.connectionstring
     res.redirect('/')
