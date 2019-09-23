@@ -35,6 +35,7 @@ function createVueApp() {
                     .then(resp=>resp.json())
                     .then(json=>this.hub=JSON.stringify(json))
                 this.refreshDevices()
+                $('#formConnectionString').collapse('hide')
             },
             toggleAutoRefresh : function(event) {
                 if (event.srcElement.checked) {
