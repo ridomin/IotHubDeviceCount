@@ -16,6 +16,7 @@ function createVueApp() {
         methods: {
             updateRefresh: function(event) {
                 refresh = parseInt(prompt("Seconds to refresh", "5"), 10) * 1000
+                if (isNaN(refresh)) refresh=5000
             },
             refreshDevices : function() {
                 fetch('/api/deviceList')
