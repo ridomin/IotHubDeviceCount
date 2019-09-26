@@ -36,7 +36,9 @@
                 Enable Automatic Refresh 
                 <input name="autoRefresh" id="autoRefresh" type="checkbox" v-on:click="toggleAutoRefresh"/>
                 <span> </span>
-                Next refresh in: <span id="nextRefresh" v-on:click="updateRefresh">{{elapsed}}</span> s.
+                <span v-show="refreshEnabled">
+                    Next refresh in: <span id="nextRefresh" v-on:click="updateRefresh">{{elapsed}}</span> s.
+                </span>
             </span>
             <div class="collapse" id="formConnectionString">
                 <div class="card card-body">

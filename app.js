@@ -25,9 +25,13 @@ router.get('/connection-string', (req,res)=> {
 })
 router.post('/connection-string',(req,res)=> {
     connectionString = req.body.connectionstring
-    const hubRegex = /(?<=HostName=).*(?=;SharedAccessKeyName)/i.exec(connectionString)
-    const hubName = hubRegex.length > 0 ? hubRegex[0] : ''
-    res.json(hubName)
+    if (connectionString && connectionString.length>0) {
+        const hubRegex = /(?<=HostName=).*(?=;SharedAccessKeyName)/i.exec(connectionString)
+        const hubName = hubRegex.length > 0 ? hubRegex[0] : ''
+        res.json(hubName)
+    } else {
+        res.json("not configured")
+    }
 })
 
 router.get('/deviceList', (req,res) => {
