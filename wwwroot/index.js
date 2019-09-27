@@ -8,21 +8,32 @@ function createVueApp() {
         data: {
             hub: "not set",
             devices: {},
-            now: new Date().toLocaleTimeString(),
-            elapsed: '',
+            deviceStatus : {},
+            elapsed: '5',
             refresh: 5000,
-            refreshEnabled: false
+            refreshEnabled: false,
+            loading : false
         },
         methods: {
             updateRefresh: function(event) {
-                this.refresh = parseInt(prompt("Seconds to refresh", "5"), 10) * 1000
-                if (isNaN(refresh)) this.refresh=5000
+                let interval = parseInt(prompt("Seconds to refresh", this.refresh /1000), 10) * 1000
+                if (isNaN(interval)) interval=5000
+                this.refresh = interval
+            },
+            refreshCount: function(){
+                this.deviceStatus.Disconnected =  this.devices.filter(d=>d.state==='Disconnected').length
+                this.deviceStatus.Connected = this.devices.filter(d=>d.state==='Connected').length
+                this.deviceStatus.Total = this.devices.length
+                this.loading=false
             },
             refreshDevices : function() {
-                
+                this.loading = true;
                 fetch('/api/deviceList')
                     .then( resp => resp.json())
-                    .then( devicesDto => this.devices = devicesDto)
+                    .then( devicesDto => {
+                        this.devices = devicesDto
+                        this.refreshCount()
+                    })
             },
             postConnectionString: function(event) {
                 console.log(connectionstring.value)
@@ -36,9 +47,7 @@ function createVueApp() {
                             body : `connectionstring=${encodeURIComponent(connectionstring.value)}`
                         })
                         .then(resp=>resp.json())
-                        .then(text=> {
-                            this.hub=text
-                        })
+                        .then(text=> this.hub=text)
                     this.refreshDevices()
                     $('#formConnectionString').collapse('hide')
                 }
@@ -68,7 +77,6 @@ function createVueApp() {
 }
 
 var app = createVueApp()
-
 
 fetch('/api/connection-string')
     .then(resp=> resp.json())
