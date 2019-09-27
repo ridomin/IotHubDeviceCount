@@ -7,7 +7,7 @@ function createVueApp() {
         el: '#deviceList',
         data: {
             hub: "not set",
-            devices: {},
+            devices: [],
             deviceStatus : {},
             elapsed: '5',
             refresh: 5000,
@@ -15,6 +15,12 @@ function createVueApp() {
             loading : false
         },
         methods: {
+            sortBy: function(by) {
+               if (this.devices.length>0) {
+                    this.devices.sort((a,b)=>a[by]>b[by])
+               }
+               
+            },
             updateRefresh: function(event) {
                 let interval = parseInt(prompt("Seconds to refresh", this.refresh /1000), 10) * 1000
                 if (isNaN(interval)) interval=5000

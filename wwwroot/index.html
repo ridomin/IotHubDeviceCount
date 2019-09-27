@@ -54,37 +54,45 @@
            <span class="spinner-border text-info" role="status" v-if="loading">
                 <span class="sr-only">Loading...</span>
             </span>
-            <div class="row align-items-start" v-if="!loading">
-                <div :id="device.deviceId" class="col-auto card elbowRoom mw-75" v-for="device in devices">
-                    <center>
-                        <div class="card-title h4">{{device.id}}</div>
-                        <img v-if="device.manufacturer === 'MXChip'"
-                            class="card-img-top" 
-                            src="mxchip.jpg" 
-                            style="width:150px;height:150px"
-                             />
+            <div id="results" v-if="!loading">
+                <div>
+                    <span>Sort by:</span>
+                    <span v-onclick="sortBy('name')">Name</span>
+                    <span v-onclick="sortBy('state')">State</span>
+                    <span v-onclick="sortBy('time')">LastActivity</span>
+                </div>
+                <div class="row align-items-start" >
+                    <div :id="device.deviceId" class="col-auto card elbowRoom mw-75" v-for="device in devices">
+                        <center>
+                            <div class="card-title h4">{{device.id}}</div>
+                            <img v-if="device.manufacturer === 'MXChip'"
+                                class="card-img-top" 
+                                src="mxchip.jpg" 
+                                style="width:150px;height:150px"
+                                />
 
-                        <img v-else 
-                            class="card-img-top"
-                            src="icon-iot-hub.svg"
-                            style="width:100px;height:150px"
-                              />
-                    </center>
-                    <div class="card-body">
-                        <a type button class="btn" 
-                            v-if="device.status==='Enabled'"
-                            v-bind:class="{
-                                'btn-success': device.state==='Connected', 
-                                'btn-dark':device.state==='Disconnected'}"
-                            v-bind:href="'device-details.html?deviceId=' + device.id">Details</a>
+                            <img v-else 
+                                class="card-img-top"
+                                src="icon-iot-hub.svg"
+                                style="width:100px;height:150px"
+                                />
+                        </center>
+                        <div class="card-body">
+                            <a type button class="btn" 
+                                v-if="device.status==='Enabled'"
+                                v-bind:class="{
+                                    'btn-success': device.state==='Connected', 
+                                    'btn-dark':device.state==='Disconnected'}"
+                                v-bind:href="'device-details.html?deviceId=' + device.id">Details</a>
 
-                        <a class="btn btn-danger" 
-                            v-else href="#">Disabled</a>
-                        
-                        <div class="card-text">{{device.state}} {{device.time}}</div>
-                    </div> <!-- card -->
-                </div> <!-- for devices -->
-            </div>
+                            <a class="btn btn-danger" 
+                                v-else href="#">Disabled</a>
+                            
+                            <div class="card-text">{{device.state}} {{device.time}}</div>
+                        </div> <!-- card -->
+                    </div> <!-- for devices -->
+                </div>
+            </div>                
         </div>
         <!-- Modal -->
         <div>
