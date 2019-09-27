@@ -1,45 +1,61 @@
 (()=>{
 
 function createVueApp() {
-    var intervalId
-  
-    var app = new Vue({
+    let intervalId
+    let asc = 1            
+    
+    let app = new Vue({
         el: '#deviceList',
         data: {
             hub: "not set",
-            devices: {},
-            now: new Date().toLocaleTimeString(),
-            elapsed: '',
+            devices: [],
+            deviceStatus : {},
+            elapsed: '5',
             refresh: 5000,
-            refreshEnabled: false
+            refreshEnabled: false,
+            loading : false
         },
         methods: {
+            sortBy: function(by) {
+               if (this.devices.length>0) {
+                    this.devices.sort((a,b)=> a[by]>b[by] ? asc : -asc)
+                    asc = -asc
+               }
+            },
             updateRefresh: function(event) {
-                this.refresh = parseInt(prompt("Seconds to refresh", "5"), 10) * 1000
-                if (isNaN(refresh)) this.refresh=5000
+                let interval = parseInt(prompt("Seconds to refresh", this.refresh /1000), 10) * 1000
+                if (isNaN(interval)) interval=5000
+                this.refresh = interval
             },
-            refreshDevices : function() {
-                
-                fetch('/api/deviceList')
-                    .then( resp => resp.json())
-                    .then( devicesDto => this.devices = devicesDto)
+            refreshCount: function(){
+                this.deviceStatus.Disconnected =  this.devices.filter(d=>d.state==='Disconnected').length
+                this.deviceStatus.Connected = this.devices.filter(d=>d.state==='Connected').length
+                this.deviceStatus.Total = this.devices.length
+                this.loading=false
             },
-            postConnectionString: function(event) {
+            refreshDevices : async function() {
+                this.loading = true;
+                await fetch('/api/deviceList')
+                        .then( resp => resp.json())
+                        .then( devicesDto => {
+                            this.devices = devicesDto
+                            this.refreshCount()
+                        })
+            },
+            postConnectionString: async function(event) {
                 console.log(connectionstring.value)
                 if (connectionstring.value.length>0){
-                    fetch("/api/connection-string",
-                        {
-                            method: 'POST',
-                            headers : { 
-                                "Content-Type": "application/x-www-form-urlencoded"
-                            },
-                            body : `connectionstring=${encodeURIComponent(connectionstring.value)}`
-                        })
-                        .then(resp=>resp.json())
-                        .then(text=> {
-                            this.hub=text
-                        })
-                    this.refreshDevices()
+                    await fetch("/api/connection-string",
+                            {
+                                method: 'POST',
+                                headers : { 
+                                    "Content-Type": "application/x-www-form-urlencoded"
+                                },
+                                body : `connectionstring=${encodeURIComponent(connectionstring.value)}`
+                            })
+                            .then(resp=>resp.json())
+                            .then(text=> this.hub=text)
+                    await this.refreshDevices()
                     $('#formConnectionString').collapse('hide')
                 }
             },
@@ -47,13 +63,13 @@ function createVueApp() {
                 this.refreshEnabled=event.srcElement.checked
                 if (this.refreshEnabled) {
                  intervalTime = new Date()   
-                 intervalId = setInterval(()=>{
+                 intervalId = setInterval(async()=>{
                     currentTime = new Date()
                     this.elapsed = Math.round((this.refresh-Math.abs(currentTime-intervalTime))/1000) + 1 //moment(currentTime).from(intervalTime)
                     if (currentTime-intervalTime>this.refresh){
                         console.log("timer")
                         intervalTime = currentTime
-                        this.refreshDevices()
+                        await this.refreshDevices()
                     } else {
                         //console.log("wait")
                     }
@@ -68,7 +84,6 @@ function createVueApp() {
 }
 
 var app = createVueApp()
-
 
 fetch('/api/connection-string')
     .then(resp=> resp.json())

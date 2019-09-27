@@ -5,25 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="s.css" />
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 </head>
 <body class="topLevel">
     
     <div id="deviceList">
         <div>
-            <span class="h1">
-                Connected Devices <span class="badge badge-primary" 
-                v-if="devices.length > 0">{{devices.length}}</span>
+            <span class="h3">
+                Devices <span class="badge badge-primary">{{deviceStatus.Total}} registered</span>
+                <span class="badge badge-success">{{deviceStatus.Connected}} connected</span>
+                <span class="badge badge-dark">{{deviceStatus.Disconnected}} disconnected</span> 
             </span>
-            <span class="spinner-border text-info" role="status" v-if="!hub">
-                <span class="sr-only">Loading...</span>
-            </span>
+         
         </div>
         <div class="alert alert-secondary elbowRoom" >
             Monitoring Azure IoT Hub <b>{{hub}}</b>. 
@@ -32,7 +26,7 @@
                 Change Hub
             </button  >
 
-            <span>
+            <span v-if="devices.length>0">
                 Enable Automatic Refresh 
                 <input name="autoRefresh" id="autoRefresh" type="checkbox" v-on:click="toggleAutoRefresh"/>
                 <span> </span>
@@ -52,37 +46,48 @@
             </div>
         </div>
         <div class="container-fluid" v-cloak>
-            <div class="row align-items-start" v-if="devices.length > 0">
-                <div :id="device.deviceId" class="col-auto card elbowRoom mw-75" v-for="device in devices">
-                    <center>
-                        <div class="card-title h4">{{device.id}}</div>
-                        <img v-if="device.manufacturer === 'MXChip'"
-                            class="card-img-top" 
-                            src="mxchip.jpg" 
-                            style="width:150px;height:150px"
-                             />
+           <span class="spinner-border text-info" role="status" v-if="loading">
+                <span class="sr-only">Loading...</span>
+            </span>
+            <div id="results" v-if="!loading">
+                <div v-if="devices.length>0">
+                    <span>Sort by:</span>
+                    <a class="btn btn-outline-primary" v-on:click="sortBy('id')">Id</a>
+                    <a class="btn btn-outline-primary" v-on:click="sortBy('state')">State</a>
+                    <a class="btn btn-outline-primary" v-on:click="sortBy('lastActivityTime')">LastActivity</a>
+                </div>
+                <div class="row align-items-start" >
+                    <div :id="device.deviceId" class="col-auto card elbowRoom mw-75" v-for="device in devices">
+                        <center>
+                            <div class="card-title h4">{{device.id}}</div>
+                            <img v-if="device.manufacturer === 'MXChip'"
+                                class="card-img-top" 
+                                src="mxchip.jpg" 
+                                style="width:150px;height:150px"
+                                />
 
-                        <img v-else 
-                            class="card-img-top"
-                            src="icon-iot-hub.svg"
-                            style="width:100px;height:150px"
-                              />
-                    </center>
-                    <div class="card-body">
-                        <a type button class="btn" 
-                            v-if="device.status==='Enabled'"
-                            v-bind:class="{
-                                'btn-success': device.state==='Connected', 
-                                'btn-dark':device.state==='Disconnected'}"
-                            v-bind:href="'device-details.html?deviceId=' + device.id">Details</a>
+                            <img v-else 
+                                class="card-img-top"
+                                src="icon-iot-hub.svg"
+                                style="width:100px;height:150px"
+                                />
+                        </center>
+                        <div class="card-body">
+                            <a type button class="btn" 
+                                v-if="device.status==='Enabled'"
+                                v-bind:class="{
+                                    'btn-success': device.state==='Connected', 
+                                    'btn-dark':device.state==='Disconnected'}"
+                                v-bind:href="'device-details.html?deviceId=' + device.id">Details</a>
 
-                        <a class="btn btn-danger" 
-                            v-else href="#">Disabled</a>
-                        
-                        <div class="card-text">{{device.state}} {{device.time}}</div>
-                    </div> <!-- card -->
-                </div> <!-- for devices -->
-            </div>
+                            <a class="btn btn-danger" 
+                                v-else href="#">Disabled</a>
+                            
+                            <div class="card-text">{{device.state}} {{device.time}}</div>
+                        </div> <!-- card -->
+                    </div> <!-- for devices -->
+                </div>
+            </div>                
         </div>
         <!-- Modal -->
         <div>
@@ -90,9 +95,9 @@
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script src="index.js"></script>
 </body>
 </html>
