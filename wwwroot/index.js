@@ -1,13 +1,14 @@
 (()=>{
 
 function createVueApp() {
-    var intervalId
-  
-    var app = new Vue({
+    let intervalId
+    let asc = 1            
+    
+    let app = new Vue({
         el: '#deviceList',
         data: {
             hub: "not set",
-            devices: {},
+            devices: [],
             deviceStatus : {},
             elapsed: '5',
             refresh: 5000,
@@ -15,6 +16,12 @@ function createVueApp() {
             loading : false
         },
         methods: {
+            sortBy: function(by) {
+               if (this.devices.length>0) {
+                    this.devices.sort((a,b)=> a[by]>b[by] ? asc : -asc)
+                    asc = -asc
+               }
+            },
             updateRefresh: function(event) {
                 let interval = parseInt(prompt("Seconds to refresh", this.refresh /1000), 10) * 1000
                 if (isNaN(interval)) interval=5000
@@ -26,29 +33,29 @@ function createVueApp() {
                 this.deviceStatus.Total = this.devices.length
                 this.loading=false
             },
-            refreshDevices : function() {
+            refreshDevices : async function() {
                 this.loading = true;
-                fetch('/api/deviceList')
-                    .then( resp => resp.json())
-                    .then( devicesDto => {
-                        this.devices = devicesDto
-                        this.refreshCount()
-                    })
+                await fetch('/api/deviceList')
+                        .then( resp => resp.json())
+                        .then( devicesDto => {
+                            this.devices = devicesDto
+                            this.refreshCount()
+                        })
             },
-            postConnectionString: function(event) {
+            postConnectionString: async function(event) {
                 console.log(connectionstring.value)
                 if (connectionstring.value.length>0){
-                    fetch("/api/connection-string",
-                        {
-                            method: 'POST',
-                            headers : { 
-                                "Content-Type": "application/x-www-form-urlencoded"
-                            },
-                            body : `connectionstring=${encodeURIComponent(connectionstring.value)}`
-                        })
-                        .then(resp=>resp.json())
-                        .then(text=> this.hub=text)
-                    this.refreshDevices()
+                    await fetch("/api/connection-string",
+                            {
+                                method: 'POST',
+                                headers : { 
+                                    "Content-Type": "application/x-www-form-urlencoded"
+                                },
+                                body : `connectionstring=${encodeURIComponent(connectionstring.value)}`
+                            })
+                            .then(resp=>resp.json())
+                            .then(text=> this.hub=text)
+                    await this.refreshDevices()
                     $('#formConnectionString').collapse('hide')
                 }
             },
