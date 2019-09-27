@@ -63,13 +63,13 @@ function createVueApp() {
                 this.refreshEnabled=event.srcElement.checked
                 if (this.refreshEnabled) {
                  intervalTime = new Date()   
-                 intervalId = setInterval(()=>{
+                 intervalId = setInterval(async()=>{
                     currentTime = new Date()
                     this.elapsed = Math.round((this.refresh-Math.abs(currentTime-intervalTime))/1000) + 1 //moment(currentTime).from(intervalTime)
                     if (currentTime-intervalTime>this.refresh){
                         console.log("timer")
                         intervalTime = currentTime
-                        this.refreshDevices()
+                        await this.refreshDevices()
                     } else {
                         //console.log("wait")
                     }
