@@ -57,9 +57,9 @@
             <div id="results" v-if="!loading">
                 <div>
                     <span>Sort by:</span>
-                    <span v-onclick="sortBy('name')">Name</span>
-                    <span v-onclick="sortBy('state')">State</span>
-                    <span v-onclick="sortBy('time')">LastActivity</span>
+                    <a class="btn btn-outline-primary" v-on:click="sortBy('id')">Id</a>
+                    <a class="btn btn-outline-primary" v-on:click="sortBy('state')">State</a>
+                    <a class="btn btn-outline-primary" v-on:click="sortBy('lastActivityTime')">LastActivity</a>
                 </div>
                 <div class="row align-items-start" >
                     <div :id="device.deviceId" class="col-auto card elbowRoom mw-75" v-for="device in devices">
