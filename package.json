@@ -1,13 +1,14 @@
 {
-  "name": "myexpressiotapp",
-  "version": "1.0.0",
+  "name": "iotexpress",
+  "version": "0.0.1",
   "description": "Sample express app using iothub node sdk",
   "repository": {
-    "url": "https://github.com/ridomin/IotHubDeviceCount"
+    "url": "https://github.com/ridomin/iotexpress"
   },
   "main": "app.js",
   "scripts": {
-    "start": "browser-sync start -p http://localhost:3000 -f wwwroot/*"
+    "start": "browser-sync start -p http://localhost:3000 -f wwwroot/*",
+    "test" : "standard"
   },
   "author": "rido",
   "license": "MIT",
@@ -17,5 +18,16 @@
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "moment": "^2.24.0"
+  },
+  "devDependencies": {
+    "standard": "^14.3.1"
+  },
+  "standard": {
+    "globals": [
+      "fetch",
+      "Vue",
+      "jQuery",
+      "prompt"
+    ]
   }
 }
