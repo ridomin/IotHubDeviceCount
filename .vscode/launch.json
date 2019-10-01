@@ -14,7 +14,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Debug node server",
             "program": "${workspaceFolder}\\app.js"
         }
     ]

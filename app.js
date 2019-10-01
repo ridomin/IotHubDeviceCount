@@ -24,6 +24,7 @@ router.get('/connection-string', (req, res) => {
     res.json('not configured')
   }
 })
+
 router.post('/connection-string', (req, res) => {
   connectionString = req.body.connectionstring
   if (connectionString && connectionString.length > 0) {
@@ -35,7 +36,7 @@ router.post('/connection-string', (req, res) => {
   }
 })
 
-router.get('/deviceList', (req, res) => {
+router.get('/getDevices', (req, res) => {
   if (connectionString.length > 0) {
     hub.getDeviceList(connectionString, list => res.json(list))
   } else {
