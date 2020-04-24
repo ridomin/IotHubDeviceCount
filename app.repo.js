@@ -14,12 +14,15 @@ function replaceAll(str, find, replace) {
 const getModelByIdAsync =  function(modelId) {
     const fileName = 'models/sample1/' +  replaceAll(modelId, ':', '_').replace(';','__') + '.json'
     return new Promise((resolve, reject) => {
-        fs.readFile(fileName, 'utf-8',  (err, d) => { 
-            if (err) reject(err)
-            resolve(d)
-        })
+        if (fs.existsSync(fileName)) {
+            fs.readFile(fileName, 'utf-8',  (err, d) => { 
+                if (err) reject(err)
+                resolve(d)
+            })
+        } else {
+            resolve(false)
+        }
     })
-    
 }
 
 module.exports = {getModelByIdAsync}

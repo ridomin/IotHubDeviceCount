@@ -82,7 +82,7 @@ async function runCommand(connectionString, deviceId, interfaceName, command, pa
     return response.result
 }
 
-async function getModelId(connectionString, deviceId) {
+async function getDigitalTwin(connectionString, deviceId) {
     const dtClient = new DTClient(connectionString)
     const twinResponse = await dtClient.getDigitalTwin(deviceId)
     const twin = twinResponse._response.parsedBody
@@ -91,4 +91,4 @@ async function getModelId(connectionString, deviceId) {
     return twin //.$metadata.$model
 }
 
-module.exports = { getDeviceList, getInterfaces, getInterfaceDetails, runCommand, getModelId }
+module.exports = { getDeviceList, getInterfaces, getInterfaceDetails, runCommand, getDigitalTwin }

@@ -49,8 +49,8 @@ router.get('/getDevices', (req, res) => {
   }
 })
 
-router.get('/getModelId', async (req, res) => {
-  const result = await hub.getModelId(connectionString, req.query.deviceId)
+router.get('/getDigitalTwin', async (req, res) => {
+  const result = await hub.getDigitalTwin(connectionString, req.query.deviceId)
   console.log(`getModelId on ${req.query.deviceId} is ${result.$metadata.$model}`)
   res.json(result)
 })

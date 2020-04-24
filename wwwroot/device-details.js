@@ -25,14 +25,22 @@
   const params = new URLSearchParams(location.search)
   deviceDetails.deviceId = params.get('deviceId')
 
-  fetch(`/api/getModelId?deviceId=${deviceDetails.deviceId}`)
+  fetch(`/api/getDigitalTwin?deviceId=${deviceDetails.deviceId}`)
     .then(res=>res.json())
     .then(twin=> {
+      if (!twin.$metadata.$model) {
+        deviceDetails.modelId = 'This device did not announce the Model ID.'
+        return
+      }
       deviceDetails.modelId=twin.$metadata.$model
 
       fetch(`/api/getModelById?modelId=${deviceDetails.modelId}`)
         .then(res=>res.json())
         .then(json=> {
+            if (!json) {
+              deviceDetails.components.push({name:'Unknown Model ID'})
+              return
+            }
             const model = JSON.parse(json)
             if (deviceDetails.modelId!=model['@id']) {
                throw new Error("Model IDS do not match") 
