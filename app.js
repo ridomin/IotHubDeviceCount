@@ -8,7 +8,11 @@ const hub = require('./app.iothub.js')
 const repo = require('./app.repo')
 const port = 3000
 
-let connectionString = 'HostName=aprilpnpbugbash.private.azure-devices-int.net;SharedAccessKeyName=iothubowner;SharedAccessKey=7OG5WvJYH8tvhWHZeNVmzMya0KOQR1bhyc8sg5G74/U='
+let connectionString = process.env.IOTHUB_CONNECTION_STRING
+
+if (!connectionString || connectionString.length<10){
+  console.log("IOTHUB_CONNECTION_STRING not found")
+}
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/api', router)
