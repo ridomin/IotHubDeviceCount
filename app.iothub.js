@@ -2,6 +2,8 @@ const hub = require('azure-iothub')
 const dtService = require('azure-iot-digitaltwins-service')
 const moment = require('moment')
 
+const DTClient = require('./rest-client/dtclient').DTClient
+
 function getDeviceList(connectionString, cb) {
     const registry = hub.Registry.fromConnectionString(connectionString)
     const queryText = `select deviceId,
@@ -80,4 +82,13 @@ async function runCommand(connectionString, deviceId, interfaceName, command, pa
     return response.result
 }
 
-module.exports = { getDeviceList, getInterfaces, getInterfaceDetails, runCommand }
+async function getModelId(connectionString, deviceId) {
+    const dtClient = new DTClient(connectionString)
+    const twinResponse = await dtClient.getDigitalTwin(deviceId)
+    const twin = twinResponse._response.parsedBody
+    //console.log(twin)
+    console.log(twin.$metadata.$model)
+    return twin //.$metadata.$model
+}
+
+module.exports = { getDeviceList, getInterfaces, getInterfaceDetails, runCommand, getModelId }

@@ -44,6 +44,12 @@ router.get('/getDevices', (req, res) => {
   }
 })
 
+router.get('/getModelId', async (req, res) => {
+  const result = await hub.getModelId(connectionString, req.query.deviceId)
+  console.log(`getModelId on ${req.query.deviceId} is ${result.$metadata.$model}`)
+  res.json(result)
+})
+
 router.get('/getInterfaces', async (req, res) => {
   const result = await hub.getInterfaces(connectionString, req.query.deviceId)
   console.log(`getInterfaces on ${req.query.deviceId}`)

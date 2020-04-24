@@ -26,7 +26,7 @@
     }
   }
 
-  class InterfaceData {
+  class ComponentInfo {
     constructor (urn, name) {
       this.urn = urn
       this.name = name
@@ -38,34 +38,46 @@
     el: '#deviceDetails',
     data: {
       deviceId: '',
-      pnpInterfaces: []
+      modelId: '',
+      components: []
     }
   })
 
   const params = new URLSearchParams(location.search)
   deviceDetails.deviceId = params.get('deviceId')
 
-  fetch(`/api/getInterfaces?deviceId=${deviceDetails.deviceId}`)
-    .then((interfaceResponse) => interfaceResponse.json())
-    .then((interfaceMap) => {
-      for (const name in interfaceMap) {
-        const urn = interfaceMap[name]
-        const newInterface = new InterfaceData(urn, name)
-        deviceDetails.pnpInterfaces.push(newInterface)
-
-        fetch(`/api/getInterfaceDetails?urn=${urn}`)
-          .then((propResponse) => propResponse.json())
-          .then((details) => {
-            details.forEach((detail) => {
-              const newDetail = new Detail(detail['@type'], detail.name, detail.description)
-              if (newDetail.schema === 'Command' && !!detail.request) {
-                newDetail.addCommandParam(detail.request.name, detail.request.schema)
-              }
-              newInterface.details.push(newDetail)
-            })
-          })
+  fetch(`/api/getModelId?deviceId=${deviceDetails.deviceId}`)
+    .then(res=>res.json())
+    .then(twin=> {
+      deviceDetails.modelId=twin.$metadata.$model
+      for (const p in twin) {
+        if ( p.substr(0, 1)!='$') {
+          deviceDetails.components.push(new ComponentInfo('', p))
+        }
       }
-    })
+    });
+  
+  // fetch(`/api/getInterfaces?deviceId=${deviceDetails.deviceId}`)
+  //   .then((interfaceResponse) => interfaceResponse.json())
+  //   .then((interfaceMap) => {
+  //     for (const name in interfaceMap) {
+  //       const urn = interfaceMap[name]
+  //       const newInterface = new ComponentInfo(urn, name)
+  //       deviceDetails.pnpInterfaces.push(newInterface)
+
+  //       fetch(`/api/getInterfaceDetails?urn=${urn}`)
+  //         .then((propResponse) => propResponse.json())
+  //         .then((details) => {
+  //           details.forEach((detail) => {
+  //             const newDetail = new Detail(detail['@type'], detail.name, detail.description)
+  //             if (newDetail.schema === 'Command' && !!detail.request) {
+  //               newDetail.addCommandParam(detail.request.name, detail.request.schema)
+  //             }
+  //             newInterface.details.push(newDetail)
+  //           })
+  //         })
+  //     }
+  //   })
 })()
 
 // Runs the command from the source form

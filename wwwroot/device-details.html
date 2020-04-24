@@ -22,11 +22,11 @@
             <span class="badge badge-primary elbowRoom" v-if="deviceId">{{deviceId}}</span>
         </div>
 
-        <div class="h3 elbowRoom">PnP Interfaces</div>
-        <div v-for="pnpInterface in pnpInterfaces">
+        <div class="h3 elbowRoom">ModelId: {{modelId}}  </div>
+        <div v-for="component in components">
             <div class="elbowRoom">
-                <div class="alert alert-primary h4" role="alert">{{pnpInterface.urn}}</div>
-                <table class="table table-striped" :id="pnpInterface.urn">
+                <div class="alert alert-primary h4" role="alert">{{component.name}}</div>
+                <table class="table table-striped" :id="component.urn">
                     <thead>
                         <tr>
                             <th scope="col">Type</th>
@@ -36,15 +36,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="detail in pnpInterface.details">
+                        <tr v-for="detail in component.details">
                             <td>{{detail.schema}}</td>
-                            <td>{{detail.name}}</td>
+                            <td>{{component.name}}</td>
                             <td>{{detail.description}}</td>
                             <td>
                                 <form class="form-group" action="" onsubmit="runCommand(this);"
                                     v-if="detail.schema === 'Command'">
                                     <input type="hidden" name="deviceId" :value="deviceId" />
-                                    <input type="hidden" name="interfaceName" :value="pnpInterface.name" />
+                                    <input type="hidden" name="interfaceName" :value="component.name" />
                                     <input type="hidden" name="command" :value="detail.name" />
                                     <input type="hidden" name="paramName" :value="detail.commandParam.name"
                                         v-if="!!detail.commandParam" />
