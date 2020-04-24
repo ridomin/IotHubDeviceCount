@@ -1,0 +1,13 @@
+{
+  "@id": "dtmi:YOUR_COMPANY_NAME_HERE:sample_device;1",
+  "displayName": "My Sample Root Interface",
+  "@type" : "Interface",
+  "contents": [
+    {
+      "@type" : "Component",
+      "schema": "dtmi:YOUR_COMPANY_NAME_HERE:EnvironmentalSensor;1",
+      "name": "sensor"
+    }
+  ],
+  "@context": "dtmi:dtdl:context;2"
+}

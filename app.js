@@ -5,9 +5,10 @@ const router = express.Router()
 
 const bodyParser = require('body-parser')
 const hub = require('./app.iothub.js')
+const repo = require('./app.repo')
 const port = 3000
 
-let connectionString = ''
+let connectionString = 'HostName=aprilpnpbugbash.private.azure-devices-int.net;SharedAccessKeyName=iothubowner;SharedAccessKey=7OG5WvJYH8tvhWHZeNVmzMya0KOQR1bhyc8sg5G74/U='
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/api', router)
@@ -47,6 +48,12 @@ router.get('/getDevices', (req, res) => {
 router.get('/getModelId', async (req, res) => {
   const result = await hub.getModelId(connectionString, req.query.deviceId)
   console.log(`getModelId on ${req.query.deviceId} is ${result.$metadata.$model}`)
+  res.json(result)
+})
+
+router.get('/getModelById', async (req, res) => {
+  const result = await repo.getModelByIdAsync(req.query.modelId)
+  console.log(`Model id ${req.query.modelId} found ${result.length}`)
   res.json(result)
 })
 

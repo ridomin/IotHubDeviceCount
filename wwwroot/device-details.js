@@ -13,27 +13,6 @@
     }
   }
 
-  class Detail {
-    constructor (schema, name, description) {
-      this.schema = schema
-      this.name = name
-      this.description = description
-      this.commandParam = undefined
-    }
-
-    addCommandParam (name, schema) {
-      this.commandParam = new CommandParam(name, schema)
-    }
-  }
-
-  class ComponentInfo {
-    constructor (urn, name) {
-      this.urn = urn
-      this.name = name
-      this.details = []
-    }
-  }
-
   const deviceDetails = new Vue({
     el: '#deviceDetails',
     data: {
@@ -50,11 +29,43 @@
     .then(res=>res.json())
     .then(twin=> {
       deviceDetails.modelId=twin.$metadata.$model
-      for (const p in twin) {
-        if ( p.substr(0, 1)!='$') {
-          deviceDetails.components.push(new ComponentInfo('', p))
-        }
-      }
+
+      fetch(`/api/getModelById?modelId=${deviceDetails.modelId}`)
+        .then(res=>res.json())
+        .then(json=> {
+            const model = JSON.parse(json)
+            if (deviceDetails.modelId!=model['@id']) {
+               throw new Error("Model IDS do not match") 
+            }
+            for (let i = 0; i < model.contents.length; i++) {
+              const c = model.contents[i];
+              console.log(c['name'])
+              const component = {urn: c['schema'], name : c['name'], items: []}
+              deviceDetails.components.push(component)
+              
+              fetch(`/api/getModelById?modelId=${c['schema']}`)
+                .then(res=>res.json())
+                .then(json=> {
+                    const items = JSON.parse(json)
+                    for (let i = 0; i < items.contents.length; i++) {
+                      const item = items.contents[i];
+                      instance = twin[c['name']]
+                      if (instance[item.name]) {
+                        item.instance = instance[item.name]
+                        item.instanceMD = JSON.stringify(instance['$metadata'])
+                      }
+                      component.items.push(item)
+                    }
+                })
+            }
+        })
+
+
+      // for (const p in twin) {
+      //   if ( p.substr(0, 1)!='$') {
+      //     deviceDetails.components.push(new ComponentInfo('', p))
+      //   }
+      // }
     });
   
   // fetch(`/api/getInterfaces?deviceId=${deviceDetails.deviceId}`)

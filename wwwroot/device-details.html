@@ -21,38 +21,38 @@
         <div class="h1 elbowRoom">Device Details
             <span class="badge badge-primary elbowRoom" v-if="deviceId">{{deviceId}}</span>
         </div>
-
         <div class="h3 elbowRoom">ModelId: {{modelId}}  </div>
+
         <div v-for="component in components">
             <div class="elbowRoom">
-                <div class="alert alert-primary h4" role="alert">{{component.name}}</div>
-                <table class="table table-striped" :id="component.urn">
+                <div class="alert alert-primary h4" role="alert">{{component.name}} {{component.urn}}</div>
+
+                <table class="table table-striped" :id="component.name">
                     <thead>
                         <tr>
                             <th scope="col">Type</th>
                             <th scope="col">Name</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Command</th>
+                            <th scope="col">Value</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="detail in component.details">
-                            <td>{{detail.schema}}</td>
-                            <td>{{component.name}}</td>
-                            <td>{{detail.description}}</td>
+                        <tr v-for="item in component.items">
+                            <td>{{item['@type']}}</td>
+                            <td :title="item.description">{{item.name}} ({{item.schema}})</td>
+                            <td :title="item.instanceMD">{{item.instance}}</td>
                             <td>
                                 <form class="form-group" action="" onsubmit="runCommand(this);"
-                                    v-if="detail.schema === 'Command'">
+                                    v-if="item.schema === 'Command'">
                                     <input type="hidden" name="deviceId" :value="deviceId" />
                                     <input type="hidden" name="interfaceName" :value="component.name" />
-                                    <input type="hidden" name="command" :value="detail.name" />
-                                    <input type="hidden" name="paramName" :value="detail.commandParam.name"
+                                    <input type="hidden" name="command" :value="item.name" />
+                                    <input type="hidden" name="paramName" :value="item.commandParam.name"
                                         v-if="!!detail.commandParam" />
-                                    <input type="hidden" name="schema" :value="detail.commandParam.schema"
+                                    <input type="hidden" name="schema" :value="item.commandParam.schema"
                                         v-if="!!detail.commandParam" />
-                                    <div class="input-group mb-3" v-if="!!detail.commandParam">
+                                    <div class="input-group mb-3" v-if="!!item.commandParam">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text" id="paramInfo">Parameter "{{detail.commandParam.name}}" ({{detail.commandParam.schema}})</span>
+                                            <span class="input-group-text" id="paramInfo">Parameter "{{item.commandParam.name}}" ({{item.commandParam.schema}})</span>
                                         </div>
                                         <textarea name="param" class="form-control" aria-describedby="paramInfo"></textarea>
                                     </div>
@@ -69,6 +69,8 @@
                         </tr>
                     </tbody>
                 </table>
+
+              
             </div>
         </div>
     </div>
