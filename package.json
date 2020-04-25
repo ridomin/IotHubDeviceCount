@@ -7,7 +7,7 @@
   },
   "main": "app.js",
   "scripts": {
-    "start": "nodemon -r dotenv/config app.js",
+    "start": "nodemon -r dotenv/config app.js -w ./*.js -i ./wwwroot",
     "browser-debug": "browser-sync start -p http://localhost:3000 -f wwwroot/*",
     "test": "standard"
   },
@@ -21,6 +21,7 @@
     "moment": "^2.24.0"
   },
   "devDependencies": {
+    "@types/vue": "^2.0.0",
     "dotenv": "^8.2.0",
     "nodemon": "^2.0.3",
     "standard": "^14.3.3"

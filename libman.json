@@ -1,0 +1,13 @@
+{
+  "version": "1.0",
+  "defaultProvider": "unpkg",
+  "libraries": [
+    {
+      "library" : "@digital-twins/ridovices@0.0.1",
+      "files" : [
+        "models/*.json"
+      ],
+      "destination" : "./models/ridovices"
+    }
+  ]
+}

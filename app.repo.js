@@ -11,7 +11,7 @@ function replaceAll(str, find, replace) {
 }
 
 
-const getModelByIdAsync =  function(modelId) {
+const getModelByIdAsync =  (modelId) => {
     const fileName = 'models/sample1/' +  replaceAll(modelId, ':', '_').replace(';','__') + '.json'
     return new Promise((resolve, reject) => {
         if (fs.existsSync(fileName)) {
