@@ -4,7 +4,7 @@ const moment = require('moment')
 
 const DTClient = require('./rest-client/dtclient').DTClient
 
-function getDeviceList(connectionString, cb) {
+const getDeviceList = (connectionString, cb) => {
     const registry = hub.Registry.fromConnectionString(connectionString)
     const queryText = `select deviceId,
                               lastActivityTime,
@@ -35,40 +35,7 @@ function getDeviceList(connectionString, cb) {
     })
 }
 
-async function getInterfaces(connectionString, deviceId) {
-    const credentials = new dtService.IoTHubTokenCredentials(connectionString)
-    const digitalTwinServiceClient = new dtService.DigitalTwinServiceClient(credentials)
-    let dt = null
-    try {
-        dt = await digitalTwinServiceClient.getDigitalTwin(deviceId)
-    } catch (err) {
-        console.log(err)
-        return
-    }
-    return dt
-        .interfaces
-        .urn_azureiot_ModelDiscovery_DigitalTwin
-        .properties
-        .modelInformation
-        .reported
-        .value
-        .interfaces
-}
-
-async function getInterfaceDetails(connectionString, urn) {
-    const credentials = new dtService.IoTHubTokenCredentials(connectionString)
-    const digitalTwinServiceClient = new dtService.DigitalTwinServiceClient(credentials)
-    let response
-    try {
-        response = await digitalTwinServiceClient.getModel(urn)
-    } catch (err) {
-        console.log(err)
-        return
-    }
-    return response.contents
-}
-
-async function runCommand(connectionString, deviceId, interfaceName, command, param) {
+const runCommand = async (connectionString, deviceId, interfaceName, command, param) => {
     const credentials = new dtService.IoTHubTokenCredentials(connectionString)
     const digitalTwinServiceClient = new dtService.DigitalTwinServiceClient(credentials)
     const cmdParam = JSON.parse(param)
@@ -82,7 +49,7 @@ async function runCommand(connectionString, deviceId, interfaceName, command, pa
     return response.result
 }
 
-async function getDigitalTwin(connectionString, deviceId) {
+const getDigitalTwin = async (connectionString, deviceId) =>  {
     const dtClient = new DTClient(connectionString)
     const twinResponse = await dtClient.getDigitalTwin(deviceId)
     const twin = twinResponse._response.parsedBody
@@ -91,4 +58,4 @@ async function getDigitalTwin(connectionString, deviceId) {
     return twin //.$metadata.$model
 }
 
-module.exports = { getDeviceList, getInterfaces, getInterfaceDetails, runCommand, getDigitalTwin }
+module.exports = { getDeviceList,  runCommand, getDigitalTwin }

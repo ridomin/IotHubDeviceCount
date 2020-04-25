@@ -16,6 +16,7 @@ import {getDigitalTwin, getModelById} from './apiClient.js'
 
     // Has Model ID?
     const twin = await getDigitalTwin(deviceDetails.deviceId)
+    console.log(twin)
     if (!twin.$metadata.$model) {
         deviceDetails.modelId = 'This device did not announce the Model ID.'
         return
@@ -26,7 +27,23 @@ import {getDigitalTwin, getModelById} from './apiClient.js'
     // Known Model?
     const model = await getModelById(deviceDetails.modelId)
     if (!model) {
-        deviceDetails.components.push({name:'Unknown Model ID'})
+        //deviceDetails.components.push({name:'Unknown Model ID'})
+        deviceDetails.modelId+='\nUnknown Model ID'
+        
+        // show twin instance without model
+
+        for (const p in twin) {
+            if (p.substring(0,1)!='$') { 
+                const component = {urn: 'no schema', name : p, items: []}
+                for (const pi in twin[p]) {
+                    console.log(pi)
+                    component.items.push({ '@type': '?', schema: 'string', name: pi, instance: twin[p][pi]})
+                }
+                deviceDetails.components.push(component)
+            }
+        }
+
+
         return
     }
 

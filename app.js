@@ -61,18 +61,6 @@ router.get('/getModelById', async (req, res) => {
   res.json(result)
 })
 
-router.get('/getInterfaces', async (req, res) => {
-  const result = await hub.getInterfaces(connectionString, req.query.deviceId)
-  console.log(`getInterfaces on ${req.query.deviceId}`)
-  res.json(result)
-})
-
-router.get('/getInterfaceDetails', async (req, res) => {
-  const result = await hub.getInterfaceDetails(connectionString, req.query.urn)
-  console.log(`getInterfaceDetails on ${req.query.urn}`)
-  res.json(result)
-})
-
 router.post('/runCommand', async (req, res) => {
   const result = await hub.runCommand(
     connectionString,
