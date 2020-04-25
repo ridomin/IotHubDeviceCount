@@ -2,6 +2,19 @@ import {getDigitalTwin, getModelById} from './apiClient.js'
 
 (async ()=> {
 
+    function renderTwin(twin) {
+    // show twin instance without model
+        for (const p in twin) {
+            if (p.substring(0,1)!='$') { 
+                const component = {urn: 'no schema', name : p, items: []}
+                for (const pi in twin[p]) {
+                    component.items.push({ '@type': '?', schema: 'string', name: pi, instance: twin[p][pi]})
+                }
+                deviceDetails.components.push(component)
+            }
+        }
+    }
+
     const deviceDetails = new Vue({
         el: '#deviceDetails',
         data: {
@@ -19,6 +32,7 @@ import {getDigitalTwin, getModelById} from './apiClient.js'
     console.log(twin)
     if (!twin.$metadata.$model) {
         deviceDetails.modelId = 'This device did not announce the Model ID.'
+        renderTwin(twin)
         return
     }
 
@@ -29,21 +43,7 @@ import {getDigitalTwin, getModelById} from './apiClient.js'
     if (!model) {
         //deviceDetails.components.push({name:'Unknown Model ID'})
         deviceDetails.modelId+='\nUnknown Model ID'
-        
-        // show twin instance without model
-
-        for (const p in twin) {
-            if (p.substring(0,1)!='$') { 
-                const component = {urn: 'no schema', name : p, items: []}
-                for (const pi in twin[p]) {
-                    console.log(pi)
-                    component.items.push({ '@type': '?', schema: 'string', name: pi, instance: twin[p][pi]})
-                }
-                deviceDetails.components.push(component)
-            }
-        }
-
-
+        renderTwin(twin)
         return
     }
 
@@ -55,13 +55,18 @@ import {getDigitalTwin, getModelById} from './apiClient.js'
         const componentModel = await getModelById(component.urn)
 
         for (let i = 0; i <  componentModel.contents.length; i++) {
-            const item = componentModel.contents[i];
+            const contentItem = componentModel.contents[i];
             const instance = twin[component.name]
-            if (instance[item.name]) {
-              item.instance = instance[item.name]
-              item.instanceMD = JSON.stringify(instance['$metadata'])
+            if (instance[contentItem.name]) {
+              contentItem.instance = instance[contentItem.name]
+              contentItem.instanceMD = JSON.stringify(instance['$metadata'])
+            }
+            const item = {type: contentItem['@type'], name: contentItem.name }
+            if (item.type==='Command' && contentItem.request) {
+                item.commandParam = {name: contentItem.request.name, schema: contentItem.request.schema }
             }
             component.items.push(item)
+
         }
     }
 

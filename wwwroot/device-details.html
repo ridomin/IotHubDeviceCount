@@ -37,19 +37,19 @@
                     </thead>
                     <tbody>
                         <tr v-for="item in component.items">
-                            <td>{{item['@type']}}</td>
+                            <td>{{item.type}}</td>
                             <td :title="item.description">{{item.name}} ({{item.schema}})</td>
                             <td :title="item.instanceMD">{{item.instance}}</td>
                             <td>
                                 <form class="form-group" action="" onsubmit="runCommand(this);"
-                                    v-if="item.schema === 'Command'">
+                                    v-if="item.type === 'Command'">
                                     <input type="hidden" name="deviceId" :value="deviceId" />
                                     <input type="hidden" name="interfaceName" :value="component.name" />
                                     <input type="hidden" name="command" :value="item.name" />
                                     <input type="hidden" name="paramName" :value="item.commandParam.name"
-                                        v-if="!!detail.commandParam" />
+                                        v-if="!!item.commandParam" />
                                     <input type="hidden" name="schema" :value="item.commandParam.schema"
-                                        v-if="!!detail.commandParam" />
+                                        v-if="!!item.commandParam" />
                                     <div class="input-group mb-3" v-if="!!item.commandParam">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="paramInfo">Parameter "{{item.commandParam.name}}" ({{item.commandParam.schema}})</span>
