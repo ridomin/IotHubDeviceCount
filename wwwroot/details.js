@@ -5,13 +5,13 @@ import {getDigitalTwin, getModelById} from './apiClient.js'
     function renderTwin(twin) {
     // show twin instance without model
         for (const p in twin) {
+            const component = {urn: 'no schema', name : p, items: []}
             if (p.substring(0,1)!='$') { 
-                const component = {urn: 'no schema', name : p, items: []}
                 for (const pi in twin[p]) {
                     component.items.push({ '@type': '?', schema: 'string', name: pi, instance: twin[p][pi]})
                 }
-                deviceDetails.components.push(component)
             }
+            deviceDetails.components.push(component)
         }
     }
 
@@ -61,7 +61,12 @@ import {getDigitalTwin, getModelById} from './apiClient.js'
               contentItem.instance = instance[contentItem.name]
               contentItem.instanceMD = JSON.stringify(instance['$metadata'])
             }
-            const item = {type: contentItem['@type'], name: contentItem.name }
+            const item = {
+                type: contentItem['@type'], 
+                name: contentItem.name, 
+                instance: contentItem.instance, 
+                instanceMD: contentItem.instanceMD 
+            }
             if (item.type==='Command' && contentItem.request) {
                 item.commandParam = {name: contentItem.request.name, schema: contentItem.request.schema }
             }

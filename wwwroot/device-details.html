@@ -41,7 +41,7 @@
                             <td :title="item.description">{{item.name}} ({{item.schema}})</td>
                             <td :title="item.instanceMD">{{item.instance}}</td>
                             <td>
-                                <form class="form-group" action="" onsubmit="runCommand(this);"
+                                <form class="form-group" action="/api/runCommand" method="POST" onsubmit=""
                                     v-if="item.type === 'Command'">
                                     <input type="hidden" name="deviceId" :value="deviceId" />
                                     <input type="hidden" name="interfaceName" :value="component.name" />

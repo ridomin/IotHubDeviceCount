@@ -15,7 +15,8 @@
             "type": "node",
             "request": "launch",
             "name": "Debug node server",
-            "program": "${workspaceFolder}\\app.js"
+            "program": "${workspaceFolder}\\app.js",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
