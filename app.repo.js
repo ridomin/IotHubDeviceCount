@@ -12,7 +12,7 @@ function replaceAll(str, find, replace) {
 
 
 const getModelByIdAsync =  (modelId) => {
-    const fileName = 'models/sample1/' +  replaceAll(modelId, ':', '_').replace(';','__') + '.json'
+    const fileName = 'models/thermostat/' +  replaceAll(modelId, ':', '-').replace(';','--') + '.json'
     return new Promise((resolve, reject) => {
         if (fs.existsSync(fileName)) {
             fs.readFile(fileName, 'utf-8',  (err, d) => { 

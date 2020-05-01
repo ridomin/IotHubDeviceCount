@@ -1,0 +1,28 @@
+{
+  "@context": "dtmi:dtdl:context;2",
+  "@id": "dtmi:com:examples:Thermostat;1",
+  "@type": "Interface",
+  "displayName": "Sample thermostat with remote control",
+  "contents": [
+    {
+      "@type": "Component",
+      "schema": "dtmi:com:examples:TemperatureSensor;1",
+      "name": "tempSensor1"
+    },
+    {
+      "@type": "Component",
+      "schema": "dtmi:azure:DeviceManagement:DeviceInformation;1",
+      "name": "deviceInfo"
+    },
+    {
+      "@type": "Component",
+      "schema": "dtmi:azure:Client:SDKInformation;1",
+      "name": "sdkInfo"
+    },
+    {
+      "@type": "Component",
+      "schema": "dtmi:com:examples:Diagnostics;1",
+      "name": "diag"
+    }
+  ]
+}
