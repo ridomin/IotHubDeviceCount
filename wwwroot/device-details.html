@@ -38,7 +38,7 @@
                     <tbody>
                         <tr v-for="item in component.items">
                             <td>{{item.type}}</td>
-                            <td :title="item.description">{{item.name}} ({{item.schema}})</td>
+                            <td :title="item.description">{{item.name}} {{item.schema}}</td>
                             <td :title="item.instanceMD">{{item.instance}}</td>
                             <td>
                                 <form class="form-group" action="/api/runCommand" method="POST" onsubmit=""
@@ -74,7 +74,7 @@
             </div>
         </div>
     </div>
-    <script src="details.js" type="module"" charset="utf-8"></script>
+    <script src="device-details.js" type="module"" charset="utf-8"></script>
 </body>
 
 </html>

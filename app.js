@@ -78,7 +78,7 @@ router.get('/getModelById', async (req, res) => {
 
 router.post('/runCommand', async (req, res) => {
   console.log(`Running command: ${req.body.command}`)
-  const result = await hub.runCommand(
+  const result = await dtservice.runCommand(
     connectionString,
     req.body.deviceId,
     req.body.interfaceName,

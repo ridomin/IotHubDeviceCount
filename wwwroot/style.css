@@ -1,5 +1,5 @@
 body {
-  font: 14px "Segoe UI", "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 10px "Segoe UI", "Lucida Grande", Helvetica, Arial, sans-serif;
   margin-bottom: 10px;
 }
 
@@ -49,6 +49,7 @@ body {
 }
 
 table, tr, th, td {
+  font-size: small;
   padding: 15px;
   border-bottom: 1px solid darkslategray;
   border-collapse: collapse;
