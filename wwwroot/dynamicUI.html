@@ -1,0 +1,29 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="style.css" rel="stylesheet" />
+    <script src="https://unpkg.com/vue"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Dynamic UI</title>
+</head>
+
+<body>
+
+    <div id="deviceDetails" v-cloak>
+        <div class="h1 elbowRoom">Device Details
+            <span class="badge badge-primary elbowRoom" v-if="deviceId">{{deviceId}}</span>
+        </div>
+        <div class="h3 elbowRoom">ModelId: {{modelId}}  </div>
+    </div>
+    <script src="dynamicUI.js" type="module"" charset="utf-8"></script>
+</body>
+</html>

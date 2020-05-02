@@ -10,7 +10,8 @@ import * as apiClient from './apiClient.js'
             showTwin: false,
             toggleIcon: '-',
             twin: '{}',
-            hasModelId: false
+            hasModelId: false, 
+            knownModelId: false
         },
         filters: {
             pretty: function(value) {
@@ -50,6 +51,7 @@ import * as apiClient from './apiClient.js'
                 const modelContent = await apiClient.getModelById(this.modelId)
                 if (modelContent) {
                     this.twin = JSON.stringify(modelContent)
+                    this.knownModelId = true
                 }  else {
                     this.twin = JSON.stringify("Unknown ModelID")
                 }
@@ -60,5 +62,4 @@ import * as apiClient from './apiClient.js'
     const params = new URLSearchParams(location.search)
     deviceDetails.deviceId = params.get('deviceId')
 
-    //deviceDetails.modelId = twin.$metadata.$model
 })()
