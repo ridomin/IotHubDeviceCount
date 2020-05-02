@@ -6,6 +6,9 @@ const router = express.Router()
 const bodyParser = require('body-parser')
 const hub = require('./app.iothub.js')
 const repo = require('./app.repo')
+const dtservice = require('./app.dtservice')
+const dtservice2 = require('./app.dtservice2')
+
 const port = 3000
 
 let connectionString = process.env.IOTHUB_CONNECTION_STRING
@@ -49,11 +52,23 @@ router.get('/getDevices', (req, res) => {
   }
 })
 
+router.get('/getDeviceTwin', async (req, res) => {
+  const result = await hub.getDeviceTwin(connectionString, req.query.deviceId)
+  //console.log(`getModelId on ${req.query.deviceId} is ${result.$metadata.$model}`)
+  res.json(result.responseBody)
+})
+
 router.get('/getDigitalTwin', async (req, res) => {
-  const result = await hub.getDigitalTwin(connectionString, req.query.deviceId)
+  const result = await dtservice.getDigitalTwin(connectionString, req.query.deviceId)
+  res.json(result)
+})
+
+router.get('/getDigitalTwin2', async (req, res) => {
+  const result = await dtservice2.getDigitalTwin2(connectionString, req.query.deviceId)
   console.log(`getModelId on ${req.query.deviceId} is ${result.$metadata.$model}`)
   res.json(result)
 })
+
 
 router.get('/getModelById', async (req, res) => {
   const result = await repo.getModelByIdAsync(req.query.modelId)

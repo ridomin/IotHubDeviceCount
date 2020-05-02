@@ -1,8 +1,6 @@
 const hub = require('azure-iothub')
-const dtService = require('azure-iot-digitaltwins-service')
-const moment = require('moment')
 
-const DTClient = require('./rest-client/dtclient').DTClient
+const moment = require('moment')
 
 const getDeviceList = (connectionString, cb) => {
     const registry = hub.Registry.fromConnectionString(connectionString)
@@ -35,24 +33,11 @@ const getDeviceList = (connectionString, cb) => {
     })
 }
 
-const runCommand = async (connectionString, deviceId, interfaceName, command, param) => {
-    const credentials = new dtService.IoTHubTokenCredentials(connectionString)
-    const digitalTwinServiceClient = new dtService.DigitalTwinServiceClient(credentials)
-    let cmdParam = {}
-    if (param) {
-        cmdParam = JSON.parse(param)
-    }
-    const response = await digitalTwinServiceClient.invokeCommand(deviceId, interfaceName, command, cmdParam)
-    return response.result
+const getDeviceTwin = async (connectionString, deviceId) => {
+    const registry = hub.Registry.fromConnectionString(connectionString)
+    const twin = await registry.getTwin(deviceId)
+    return twin
 }
 
-const getDigitalTwin = async (connectionString, deviceId) =>  {
-    const dtClient = new DTClient(connectionString)
-    const twinResponse = await dtClient.getDigitalTwin(deviceId)
-    const twin = twinResponse._response.parsedBody
-    //console.log(twin)
-    console.log(twin.$metadata.$model)
-    return twin //.$metadata.$model
-}
 
-module.exports = { getDeviceList,  runCommand, getDigitalTwin }
+module.exports = { getDeviceList, getDeviceTwin }

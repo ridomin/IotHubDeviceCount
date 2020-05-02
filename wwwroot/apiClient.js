@@ -1,6 +1,24 @@
+const getDeviceTwin = (deviceId) =>  {
+    return new Promise((resolve, reject) => {
+        fetch(`/api/getDeviceTwin?deviceId=${deviceId}`)
+            .then(resp=>resp.json())
+            .then(twin=>resolve(twin))
+            .catch(err=>reject(err))
+    })
+}
+
 const getDigitalTwin = (deviceId) =>  {
     return new Promise((resolve, reject) => {
         fetch(`/api/getDigitalTwin?deviceId=${deviceId}`)
+            .then(resp=>resp.json())
+            .then(twin=>resolve(twin))
+            .catch(err=>reject(err))
+    })
+}
+
+const getDigitalTwin2 = (deviceId) =>  {
+    return new Promise((resolve, reject) => {
+        fetch(`/api/getDigitalTwin2?deviceId=${deviceId}`)
             .then(resp=>resp.json())
             .then(twin=>resolve(twin))
             .catch(err=>reject(err))
@@ -16,4 +34,4 @@ const getModelById = (modelId) => {
     })
 }
 
-export {getDigitalTwin, getModelById}
+export { getDeviceTwin, getDigitalTwin,  getDigitalTwin2, getModelById}

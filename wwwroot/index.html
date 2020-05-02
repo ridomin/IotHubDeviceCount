@@ -112,7 +112,7 @@
                                v-bind:class="{
                                         'btn-success': device.state === 'Connected',
                                         'btn-secondary': device.state === 'Disconnected'}"
-                               v-bind:href="'device-details.html?deviceId=' + device.id">Details</a>
+                               v-bind:href="'device.html?deviceId=' + device.id">Details</a>
 
                             <div class="card-text">{{device.state}} {{device.time}}</div>
                         </div> <!-- card -->
