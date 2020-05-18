@@ -1,7 +1,5 @@
 const express = require('express')
 const path = require('path')
-const app = express()
-const router = express.Router()
 
 const bodyParser = require('body-parser')
 const hub = require('./app.iothub.js')
@@ -9,17 +7,43 @@ const repo = require('./app.repo')
 const dtservice = require('./app.dtservice')
 const dtservice2 = require('./app.dtservice2')
 
+const http = require('http')
+const WebSocket = require('ws')
+const EventHubReader = require('./app.eventHub')
+
 const port = 3000
 
 let connectionString = process.env.IOTHUB_CONNECTION_STRING
 
-if (!connectionString || connectionString.length<10){
-  console.log("IOTHUB_CONNECTION_STRING not found")
+if (!connectionString || connectionString.length < 10) {
+  console.log('IOTHUB_CONNECTION_STRING not found')
 }
+
+const app = express()
+const router = express.Router()
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/api', router)
 app.use(express.static('wwwroot'))
+
+const server = http.createServer(app)
+const wss = new WebSocket.Server({ server })
+
+console.log('wss created')
+console.log(wss)
+
+wss.broadcast = (data) => {
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      try {
+        console.log(`Broadcasting data ${data}`)
+        client.send(data)
+      } catch (e) {
+        console.error(e)
+      }
+    }
+  })
+}
 
 router.get('/', (req, res, next) => res.sendFile('index.html', { root: path.join(__dirname, 'wwwroot/index.html') }))
 
@@ -54,7 +78,7 @@ router.get('/getDevices', (req, res) => {
 
 router.get('/getDeviceTwin', async (req, res) => {
   const result = await hub.getDeviceTwin(connectionString, req.query.deviceId)
-  //console.log(`getModelId on ${req.query.deviceId} is ${result.$metadata.$model}`)
+  // console.log(`getModelId on ${req.query.deviceId} is ${result.$metadata.$model}`)
   res.json(result.responseBody)
 })
 
@@ -68,7 +92,6 @@ router.get('/getDigitalTwin2', async (req, res) => {
   console.log(`getModelId on ${req.query.deviceId} is ${result.$metadata.$model}`)
   res.json(result)
 })
-
 
 router.get('/getModelById', async (req, res) => {
   const result = await repo.getModelByIdAsync(req.query.modelId)
@@ -85,7 +108,26 @@ router.post('/runCommand', async (req, res) => {
     req.body.command,
     req.body.param)
 
-    res.json(result)
+  res.json(result)
 })
 
+const eventHubConsumerGroup = process.env.EventHubConsumerGroup
+const eventHubReader = new EventHubReader(connectionString, eventHubConsumerGroup)
+
 app.listen(port, () => console.log(`IoT Express app listening on port ${port}`))
+
+;(async () => {
+  await eventHubReader.startReadMessage((message, date, deviceId) => {
+    try {
+      const payload = {
+        IotData: message,
+        MessageDate: date || Date.now().toISOString(),
+        DeviceId: deviceId
+      }
+
+      wss.broadcast(JSON.stringify(payload))
+    } catch (err) {
+      console.error('Error broadcasting: [%s] from [%s].', err, message)
+    }
+  })
+})()

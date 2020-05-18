@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Device View</title>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js" type="text/javascript" charset="utf-8"></script>
+    <link href="live.css" rel="stylesheet" />
+</head>
+
+<body>
+    <script type="text/x-template" id="app-template">
+        <div>
+          <h1>{{ deviceId }}</h1>
+        </div>
+      </script>
+
+    
+      <div id="app" class="container">
+          <app></app>
+          <span>
+            <span id="deviceCount">0 devices</span>
+            <select id="listOfDevices" class="select_box"></select>
+        </span>
+      </div>
+
+    <div class="flex-container">
+        <div>
+            <canvas id="iotChart"></canvas>
+        </div>
+        <div>2</div>
+        <div>3</div>  
+      </div>
+
+    <script src="live.js" type="module"></script>
+    <script src="chart/chart-data.js"  type="module"></script>
+</body>
+
+</html>
