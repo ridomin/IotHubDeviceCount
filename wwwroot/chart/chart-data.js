@@ -170,7 +170,6 @@ webSocket.onmessage = function onMessage (message) {
       //   listOfDevices.selectedIndex = 0
       //   OnSelectionChange()
       // }
-      OnSelectionChange()
     }
 
     myLineChart.update()
