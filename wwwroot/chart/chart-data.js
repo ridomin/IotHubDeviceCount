@@ -16,7 +16,10 @@ class DeviceData {
   }
 
   addData (time, temperature, humidity) {
-    this.timeData.push(time)
+    const t = new Date(time)
+    const timeString = `${t.getHours()}:${t.getMinutes()}:${t.getSeconds()}`
+
+    this.timeData.push(timeString)
     this.temperatureData.push(temperature)
     this.humidityData.push(humidity || null)
 
@@ -115,17 +118,17 @@ const myLineChart = new Chart(
 
 // Manage a list of devices in the UI, and update which device data the chart is showing
 // based on selection
-let needsAutoSelect = true
-const deviceCount = document.getElementById('deviceCount')
-const listOfDevices = document.getElementById('listOfDevices')
+// let needsAutoSelect = true
+// const deviceCount = document.getElementById('deviceCount')
+// const listOfDevices = document.getElementById('listOfDevices')
 function OnSelectionChange () {
-  const device = trackedDevices.findDevice(listOfDevices[listOfDevices.selectedIndex].text)
+  const device = trackedDevices.devices[0]
   chartData.labels = device.timeData
   chartData.datasets[0].data = device.temperatureData
   chartData.datasets[1].data = device.humidityData
   myLineChart.update()
 }
-listOfDevices.addEventListener('change', OnSelectionChange, false)
+// istOfDevices.addEventListener('change', OnSelectionChange, false)
 
 // When a web socket message arrives:
 // 1. Unpack it
@@ -136,7 +139,7 @@ listOfDevices.addEventListener('change', OnSelectionChange, false)
 webSocket.onmessage = function onMessage (message) {
   try {
     const messageData = JSON.parse(message.data)
-    console.log(messageData)
+    // console.log(messageData)
 
     // time and either temperature or humidity are required
     if (!messageData.MessageDate || (!messageData.IotData.temperature && !messageData.IotData.humidity)) {
@@ -151,22 +154,23 @@ webSocket.onmessage = function onMessage (message) {
     } else {
       const newDeviceData = new DeviceData(messageData.DeviceId)
       trackedDevices.devices.push(newDeviceData)
-      const numDevices = trackedDevices.getDevicesCount()
-      deviceCount.innerText = numDevices === 1 ? `${numDevices} device` : `${numDevices} devices`
+      // const numDevices = trackedDevices.getDevicesCount()
+      // deviceCount.innerText = numDevices === 1 ? `${numDevices} device` : `${numDevices} devices`
       newDeviceData.addData(messageData.MessageDate, messageData.IotData.temperature, messageData.IotData.humidity)
 
       // add device to the UI list
       const node = document.createElement('option')
       const nodeText = document.createTextNode(messageData.DeviceId)
       node.appendChild(nodeText)
-      listOfDevices.appendChild(node)
+      // listOfDevices.appendChild(node)
 
       // if this is the first device being discovered, auto-select it
-      if (needsAutoSelect) {
-        needsAutoSelect = false
-        listOfDevices.selectedIndex = 0
-        OnSelectionChange()
-      }
+      // if (needsAutoSelect) {
+      //   needsAutoSelect = false
+      //   listOfDevices.selectedIndex = 0
+      //   OnSelectionChange()
+      // }
+      OnSelectionChange()
     }
 
     myLineChart.update()

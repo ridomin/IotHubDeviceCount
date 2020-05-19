@@ -1,16 +1,16 @@
-(async () => {
-  Vue.component('app', {
-    template: '#app-template',
-    data: () => {
-      const params = new URLSearchParams(window.location.search)
-      return {
-        deviceId: params.get('deviceId')
-      }
+
+const protocol = document.location.protocol.startsWith('https') ? 'wss://' : 'ws://'
+const webSocket = new WebSocket(protocol + window.location.host)
+
+
+;(async () => {
+  const app = new Vue({
+    el: '#app',
+    data: {
+      deviceId: '',
+      currentTemp: '',
+      targetTemp: ''
     }
   })
-
-  const app = new Vue({
-    el: '#app'
-  })
-  console.log(app)
+  app.deviceId = new URLSearchParams(window.location.search).get('deviceId')
 })()

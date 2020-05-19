@@ -36,7 +36,7 @@ wss.broadcast = (data) => {
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
       try {
-        console.log(`Broadcasting data ${data}`)
+        // console.log(`Broadcasting data ${data}`)
         client.send(data)
       } catch (e) {
         console.error(e)
@@ -114,7 +114,7 @@ router.post('/runCommand', async (req, res) => {
 const eventHubConsumerGroup = process.env.EventHubConsumerGroup
 const eventHubReader = new EventHubReader(connectionString, eventHubConsumerGroup)
 
-app.listen(port, () => console.log(`IoT Express app listening on port ${port}`))
+server.listen(port, () => console.log(`IoT Express app listening on port ${port}`))
 
 ;(async () => {
   await eventHubReader.startReadMessage((message, date, deviceId) => {
