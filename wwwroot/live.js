@@ -96,7 +96,6 @@ const chartOptions = {
 
   webSocket.onmessage = (message) => {
     const messageData = JSON.parse(message.data)
-    console.log('msg received ' + messageData.IotData.temperature)
     if (messageData.IotData.temperature) {
       deviceData.addData(messageData.MessageDate, messageData.IotData.temperature, messageData.IotData.humidity)
       app.currentTemp = Math.ceil(messageData.IotData.temperature * 100) / 100

@@ -34,7 +34,6 @@ wss.broadcast = (data) => {
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
       try {
-        // console.log(`Broadcasting data ${data}`)
         client.send(data)
       } catch (e) {
         console.error(e)
@@ -76,7 +75,6 @@ router.get('/getDevices', (req, res) => {
 
 router.get('/getDeviceTwin', async (req, res) => {
   const result = await hub.getDeviceTwin(connectionString, req.query.deviceId)
-  // console.log(`getModelId on ${req.query.deviceId} is ${result.$metadata.$model}`)
   res.json(result.responseBody)
 })
 

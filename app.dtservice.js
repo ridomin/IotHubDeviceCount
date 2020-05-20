@@ -18,10 +18,7 @@ const updateDigitalTwin = async (connectionString, deviceId, componentName, prop
 
   const credentials = new dtService.IoTHubTokenCredentials(connectionString)
   const digitalTwinServiceClient = new dtService.DigitalTwinServiceClient(credentials)
-
-  console.log(patch)
   const updResp = await digitalTwinServiceClient.updateDigitalTwin(deviceId, patch)
-  console.log(updResp)
 }
 
 const runCommand = async (connectionString, deviceId, componentName, commandName, payload) => {
