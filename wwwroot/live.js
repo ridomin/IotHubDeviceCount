@@ -1,6 +1,8 @@
 
+import * as apiClient from './apiClient.js'
+
 const protocol = document.location.protocol.startsWith('https') ? 'wss://' : 'ws://'
-const webSocket = new WebSocket(protocol + window.location.host)
+const webSocket = new window.WebSocket(protocol + window.location.host)
 
 class DeviceData {
   constructor (deviceId) {
@@ -56,13 +58,25 @@ const chartOptions = {
   const app = new Vue({
     el: '#app',
     data: {
-      deviceId: '',
-      currentTemp: '',
-      targetTemp: ''
+      deviceId: 'unset',
+      currentTemp: 0,
+      targetTemp: 0
+    },
+    methods: {
+      increase: async function () {
+        this.targetTemp += 2
+        await apiClient.updateTwin(this.deviceId, 'tempSensor1', 'targetTemperature', this.targetTemp)
+      },
+      decrease: async function () {
+        this.targetTemp -= 2
+        await apiClient.updateTwin(this.deviceId, 'tempSensor1', 'targetTemperature', this.targetTemp)
+      }
     }
   })
-  app.deviceId = deviceId
 
+  app.deviceId = deviceId
+  var twin = await apiClient.getDeviceTwin(deviceId)
+  app.targetTemp = twin.properties.desired['$iotin:tempSensor1'].targetTemperature.value
   const myLineChart = new Chart(
     document.getElementById('iotChart').getContext('2d'),
     {

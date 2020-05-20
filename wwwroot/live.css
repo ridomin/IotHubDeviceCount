@@ -1,3 +1,6 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
 .flex-container {
     display: flex;
     flex-wrap: nowrap;
@@ -14,4 +17,14 @@
   .flex-50perc {
     min-width: 700px ;
     min-height: 500px;
+  }
+
+  .superBig {
+    font-size: 50pt;
+    margin: 5px;
+    cursor:pointer;
+  }
+
+  .bigNumber {
+    font: 30pt Arial
   }

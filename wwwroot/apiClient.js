@@ -34,4 +34,23 @@ const getModelById = (modelId) => {
   })
 }
 
-export { getDeviceTwin, getDigitalTwin, getDigitalTwin2, getModelById }
+const updateTwin = (deviceId, componentName, propertyName, propertyValue) => {
+  // const data = new window.FormData()
+  // data.append('json', JSON.stringify({ deviceId, componentName, propertyName, propertyValue }))
+  const options = {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ deviceId, componentName, propertyName, propertyValue })
+  }
+  return new Promise((resolve, reject) => {
+    fetch('/api/updateTwin', options)
+      .then(resp => resp.json())
+      .then(d => resolve(d))``
+      .catch(err => reject(err))
+  })
+}
+
+export { getDeviceTwin, getDigitalTwin, getDigitalTwin2, getModelById, updateTwin }

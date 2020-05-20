@@ -22,15 +22,13 @@ if (!connectionString || connectionString.length < 10) {
 const app = express()
 const router = express.Router()
 
+app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/api', router)
 app.use(express.static('wwwroot'))
 
 const server = http.createServer(app)
 const wss = new WebSocket.Server({ server })
-
-console.log('wss created')
-console.log(wss)
 
 wss.broadcast = (data) => {
   wss.clients.forEach((client) => {
@@ -96,6 +94,12 @@ router.get('/getDigitalTwin2', async (req, res) => {
 router.get('/getModelById', async (req, res) => {
   const result = await repo.getModelByIdAsync(req.query.modelId)
   console.log(`Model id ${req.query.modelId} found ${result.length}`)
+  res.json(result)
+})
+
+router.post('/updateTwin', async (req, res) => {
+  const result = await dtservice.updateDigitalTwin(connectionString, req.body.deviceId, req.body.componentName, req.body.propertyName, req.body.propertyValue)
+  console.log('twin updated')
   res.json(result)
 })
 

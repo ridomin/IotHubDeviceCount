@@ -38,5 +38,4 @@ const getDeviceTwin = async (connectionString, deviceId) => {
   const twin = await registry.getTwin(deviceId)
   return twin
 }
-
 module.exports = { getDeviceList, getDeviceTwin }

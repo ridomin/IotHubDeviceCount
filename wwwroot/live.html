@@ -13,8 +13,6 @@
 
 <body>
 
-
-
   <div id="app" class="container">
     <h1>{{ deviceId }}</h1>
     <span>
@@ -22,24 +20,24 @@
       <select id="listOfDevices" class="select_box"></select>
     </span>
 
-
     <div class="flex-container">
-      <div class="flex-50perc">
-        <canvas id="iotChart"></canvas>
-      </div>
       <div>
         <h3>Current Temp</h3>
-        <div>
-          {{ currentTemp }}
-        </div>
+        <div class="bigNumber">{{ currentTemp }}</div>
       </div>
       <div>
         <h3>Target Temp</h3>
-        <div>{{ targetTemp }}</div>
+        <div class="bigNumber">{{ targetTemp }}</div>
+        <div class="superBig">
+          <span v-on:click="decrease">-</span><span>|</span> <span v-on:click="increase">+</span>
+        </div>
       </div>
     </div>
+    <canvas id="iotChart"></canvas>
   </div>
+
   <script src="live.js" type="module"></script>
+
 </body>
 
 </html>
