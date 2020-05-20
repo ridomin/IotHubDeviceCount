@@ -49,7 +49,10 @@ const chartOptions = {
         labelString: 'Temperature (ºC)',
         display: true
       },
-      position: 'right'
+      position: 'right',
+      ticks: {
+        beginAtZero: true
+      }
     }]
   }
 }
@@ -70,13 +73,18 @@ const chartOptions = {
       decrease: async function () {
         this.targetTemp -= 2
         await apiClient.updateTwin(this.deviceId, 'tempSensor1', 'targetTemperature', this.targetTemp)
+      },
+      reboot: async function () {
+        console.log('reboot')
+        await apiClient.runCommand(this.deviceId, 'diag', 'reboot', 2)
       }
     }
   })
 
   app.deviceId = deviceId
   var twin = await apiClient.getDeviceTwin(deviceId)
-  app.targetTemp = twin.properties.desired['$iotin:tempSensor1'].targetTemperature.value
+  const targetTempValue = twin.properties.desired['$iotin:tempSensor1'].targetTemperature.value
+  app.targetTemp = Math.ceil(targetTempValue * 100) / 100
   const myLineChart = new Chart(
     document.getElementById('iotChart').getContext('2d'),
     {
@@ -91,7 +99,7 @@ const chartOptions = {
     console.log('msg received ' + messageData.IotData.temperature)
     if (messageData.IotData.temperature) {
       deviceData.addData(messageData.MessageDate, messageData.IotData.temperature, messageData.IotData.humidity)
-      app.currentTemp = messageData.IotData.temperature
+      app.currentTemp = Math.ceil(messageData.IotData.temperature * 100) / 100
       chartData.labels = deviceData.timeData
       chartData.datasets[0].data = deviceData.temperatureData
       myLineChart.update()

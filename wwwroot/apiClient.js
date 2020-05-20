@@ -53,4 +53,21 @@ const updateTwin = (deviceId, componentName, propertyName, propertyValue) => {
   })
 }
 
-export { getDeviceTwin, getDigitalTwin, getDigitalTwin2, getModelById, updateTwin }
+const runCommand = (deviceId, componentName, commandName, payload) => {
+  const options = {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ deviceId, componentName, commandName, payload })
+  }
+  return new Promise((resolve, reject) => {
+    fetch('/api/runCommand', options)
+      .then(resp => resp.json())
+      .then(d => resolve(d))``
+      .catch(err => reject(err))
+  })
+}
+
+export { getDeviceTwin, getDigitalTwin, getDigitalTwin2, getModelById, updateTwin, runCommand }

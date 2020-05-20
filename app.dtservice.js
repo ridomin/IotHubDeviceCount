@@ -24,14 +24,14 @@ const updateDigitalTwin = async (connectionString, deviceId, componentName, prop
   console.log(updResp)
 }
 
-const runCommand = async (connectionString, deviceId, interfaceName, command, param) => {
+const runCommand = async (connectionString, deviceId, componentName, commandName, payload) => {
   const credentials = new dtService.IoTHubTokenCredentials(connectionString)
   const digitalTwinServiceClient = new dtService.DigitalTwinServiceClient(credentials)
   let cmdParam = {}
-  if (param) {
-    cmdParam = JSON.parse(param)
+  if (payload) {
+    cmdParam = JSON.parse(payload)
   }
-  const response = await digitalTwinServiceClient.invokeCommand(deviceId, interfaceName, command, cmdParam)
+  const response = await digitalTwinServiceClient.invokeComponentCommand(deviceId, componentName, commandName, cmdParam)
   return response.result
 }
 

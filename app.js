@@ -108,9 +108,9 @@ router.post('/runCommand', async (req, res) => {
   const result = await dtservice.runCommand(
     connectionString,
     req.body.deviceId,
-    req.body.interfaceName,
-    req.body.command,
-    req.body.param)
+    req.body.componentName,
+    req.body.commandName,
+    req.body.payload)
 
   res.json(result)
 })
